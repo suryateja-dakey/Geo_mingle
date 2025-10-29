@@ -64,26 +64,32 @@ export default function Home() {
     try {
       const result = await generateInitialItinerary({ city, prompt });
       const newActivities = result.itinerary.split('\n')
-        .filter(line => line.trim() !== '' && line.trim().length > 5) // ensure lines are not empty and have some content
+        .map(line => line.trim())
+        .filter(line => line !== '' && line.length > 5)
         .map((line) => {
           // Regex to capture time (e.g., "9:00 AM", "14:30") and description
-          const timeMatch = line.match(/^(.*?):\s/);
+          const timeMatch = line.match(/^(\d{1,2}:\d{2}\s*(?:AM|PM)?|Anytime)\s*:\s*/i);
           let time = "Anytime";
           let description = line;
 
           if (timeMatch && timeMatch[1]) {
             time = timeMatch[1].trim();
             description = line.substring(timeMatch[0].length).trim();
-          } else {
-             const fallbackTimeMatch = line.match(/^(\d{1,2}:\d{2}\s?[AP]M?)/i);
-             if(fallbackTimeMatch) {
-                time = fallbackTimeMatch[1].trim();
-                description = line.substring(fallbackTimeMatch[0].length).trim().replace(/^-/,'').trim();
-             }
           }
           
           return { id: crypto.randomUUID(), time, description, isCustom: false };
         });
+
+      if (newActivities.length === 0 && result.itinerary.length > 0) {
+        // Fallback for single-line or unformatted itineraries
+        newActivities.push({
+          id: crypto.randomUUID(),
+          time: 'Anytime',
+          description: result.itinerary,
+          isCustom: false,
+        });
+      }
+
 
       setActivities(prev => [...prev, ...newActivities]);
       setAiSheetOpen(false);
