@@ -51,48 +51,6 @@ export default function Home() {
     setActivities(prev => prev.filter(activity => activity.id !== id));
   };
 
-  const parseItinerary = (itinerary: string): Omit<Activity, 'id' | 'isCustom'>[] => {
-    // Regex to split the itinerary by time patterns (e.g., "9:00 AM", "14:30").
-    // This will handle cases where activities are on the same line.
-    const activityParts = itinerary.split(/(?=\d{1,2}:\d{2}\s*(?:AM|PM)?\s*:)/i);
-    
-    let firstActivityHasNoTime = false;
-    // Check if the first part has a time. If not, it's a standalone activity.
-    if (activityParts.length > 0 && !/^\d{1,2}:\d{2}\s*(?:AM|PM)?\s*:/.test(activityParts[0])) {
-        firstActivityHasNoTime = true;
-    }
-
-    const parsedActivities = activityParts
-      .map((part, index) => {
-        const trimmedPart = part.trim();
-        if (trimmedPart === '') return null;
-
-        // If it's the first part and it has no time, handle it separately.
-        if (index === 0 && firstActivityHasNoTime) {
-            return {
-                time: 'Anytime',
-                description: trimmedPart
-            };
-        }
-
-        const timeMatch = trimmedPart.match(/^(\d{1,2}:\d{2}\s*(?:AM|PM)?)\s*:\s*(.*)/i);
-        if (timeMatch) {
-          const [, time, description] = timeMatch;
-          return { time: time.trim(), description: description.trim() };
-        }
-        
-        return null; // Should not happen with the split logic, but for safety.
-      })
-      .filter((activity): activity is Omit<Activity, 'id' | 'isCustom'> => activity !== null && activity.description.length > 0);
-
-    // If parsing fails, fall back to treating the whole string as one activity
-    if (parsedActivities.length === 0 && itinerary.length > 0) {
-      return [{ time: 'Anytime', description: itinerary }];
-    }
-    
-    return parsedActivities;
-  };
-
   const handleGenerateItinerary = async (prompt: string) => {
     if (!city || city === 'Detecting location...') {
       toast({
@@ -106,9 +64,7 @@ export default function Home() {
     try {
       const result = await generateInitialItinerary({ city, prompt });
       
-      const parsedActivities = parseItinerary(result.itinerary);
-
-      const newActivities = parsedActivities.map(activity => ({
+      const newActivities: Activity[] = result.activities.map(activity => ({
         ...activity,
         id: crypto.randomUUID(),
         isCustom: false,

@@ -5,7 +5,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GripVertical, X } from 'lucide-react';
+import { GripVertical, X, MapPin } from 'lucide-react';
 import { Button } from './ui/button';
 
 export function ActivityCard({ activity, onRemove }: { activity: Activity, onRemove: (id: string) => void }) {
@@ -16,16 +16,33 @@ export function ActivityCard({ activity, onRemove }: { activity: Activity, onRem
     transition,
   };
 
+  const LocationLink = ({ location, city }: { location?: string, city: string }) => {
+    if (!location) return null;
+
+    const query = encodeURIComponent(`${location}, ${city}`);
+    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+    return (
+      <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2">
+        <MapPin className="h-4 w-4" />
+        {location}
+      </a>
+    );
+  };
+
   return (
     <div ref={setNodeRef} style={style} className="relative group">
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="flex items-center p-4 gap-4">
-          <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground">
+        <CardContent className="flex items-start p-4 gap-4">
+          <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
           </div>
           <div className="flex-grow">
             <p className="font-medium">{activity.description}</p>
             <p className="text-sm text-muted-foreground">{activity.time}</p>
+            {activity.location && (
+              <LocationLink location={activity.location} city="" />
+            )}
           </div>
           <div className="flex items-center gap-2">
             {activity.isCustom ? (

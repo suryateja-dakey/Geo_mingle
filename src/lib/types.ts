@@ -3,4 +3,5 @@ export type Activity = {
   time: string;
   description: string;
   isCustom: boolean;
+  location?: string;
 };

@@ -16,8 +16,14 @@ const GenerateInitialItineraryInputSchema = z.object({
 });
 export type GenerateInitialItineraryInput = z.infer<typeof GenerateInitialItineraryInputSchema>;
 
+const ActivitySchema = z.object({
+  time: z.string().describe('The time of the activity in a friendly format (e.g., "9:00 AM", "1:30 PM").'),
+  description: z.string().describe('A description of the activity.'),
+  location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Louvre Museum"). This should be just the name of the place, not the full address.'),
+});
+
 const GenerateInitialItineraryOutputSchema = z.object({
-  itinerary: z.string().describe('A detailed itinerary for the day, including activities, locations, and times. Each activity should be on a new line, starting with the time (e.g., "9:00 AM: Visit the museum").'),
+  activities: z.array(ActivitySchema).describe('An array of activity objects that make up the itinerary for the day.'),
 });
 export type GenerateInitialItineraryOutput = z.infer<typeof GenerateInitialItineraryOutputSchema>;
 
@@ -29,7 +35,14 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   name: 'generateInitialItineraryPrompt',
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
-  prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}. The itinerary should include specific activities and locations. Each activity must be on a new line and start with a time, like "9:00 AM: Activity Description". Make the itinerary concise and easy to follow.`,
+  prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
+
+For each activity in the itinerary, provide the following structured information:
+1.  'time': The time for the activity.
+2.  'description': A clear description of what the activity is.
+3.  'location': The specific name of the place, monument, or venue (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"). If no specific venue is associated, you can leave this blank.
+
+Return the entire itinerary as an array of these activity objects.`,
 });
 
 const generateInitialItineraryFlow = ai.defineFlow(
