@@ -26,7 +26,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      const storedActivities = localStorage.getItem('roamright-activities');
+      const storedActivities = localStorage.getItem('geomingle-activities');
       if (storedActivities) {
         setActivities(JSON.parse(storedActivities));
       }
@@ -39,7 +39,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem('roamright-activities', JSON.stringify(activities));
+      localStorage.setItem('geomingle-activities', JSON.stringify(activities));
     }
   }, [activities, isMounted]);
 

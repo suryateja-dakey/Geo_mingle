@@ -15,7 +15,7 @@ export function MainHeader() {
       <div className="container flex h-16 items-center">
         <a href="/" className="mr-4 flex items-center gap-2">
           <Compass className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold">RoamRight</span>
+          <span className="text-lg font-bold">Geo Mingle</span>
         </a>
         
         <div className="flex flex-1 items-center justify-end space-x-4">
