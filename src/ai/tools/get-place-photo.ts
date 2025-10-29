@@ -7,7 +7,7 @@ const GetPlacePhotoUrlInputSchema = z.object({
   query: z.string().describe('The search query for the place (e.g., "Charminar, Hyderabad").'),
 });
 
-const GetPlacePhotoUrlOutputSchema = z.string().url().optional().describe('The URL of a photo of the place, or undefined if not found.');
+const GetPlacePhotoUrlOutputSchema = z.string().url().optional().describe('The URL of a photo of the place, or a placeholder if not found.');
 
 export const getPlacePhotoUrlTool = ai.defineTool(
   {
@@ -18,9 +18,11 @@ export const getPlacePhotoUrlTool = ai.defineTool(
   },
   async ({query}) => {
     const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+    const placeholderUrl = `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
+
     if (!apiKey) {
       console.warn('GOOGLE_PLACES_API_KEY is not set. Returning placeholder.');
-      return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
+      return placeholderUrl;
     }
 
     try {
@@ -34,7 +36,7 @@ export const getPlacePhotoUrlTool = ai.defineTool(
       const findPlaceResponse = await fetch(findPlaceUrl.toString());
       if (!findPlaceResponse.ok) {
         console.error('Error finding place:', await findPlaceResponse.text());
-        return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
+        return placeholderUrl;
       }
       const findPlaceData = await findPlaceResponse.json();
 
@@ -42,7 +44,7 @@ export const getPlacePhotoUrlTool = ai.defineTool(
 
       if (!photoReference) {
         console.log(`No photo found for query: "${query}". Returning placeholder.`);
-        return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
+        return placeholderUrl;
       }
 
       // 2. Get Photo URL from reference
@@ -55,7 +57,7 @@ export const getPlacePhotoUrlTool = ai.defineTool(
 
     } catch (error) {
       console.error('Error in getPlacePhotoUrl tool:', error);
-      return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
+      return placeholderUrl;
     }
   }
 );
