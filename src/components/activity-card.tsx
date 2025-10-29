@@ -10,7 +10,7 @@ import { GripVertical, X, MapPin, ImageIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 
-export function ActivityCard({ activity, onRemove, city }: { activity: Activity, onRemove: (id: string) => void, city: string | null }) {
+export function ActivityCard({ activity, onRemove, city, onClick }: { activity: Activity, onRemove: (id: string) => void, city: string | null, onClick: (activity: Activity) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: activity.id });
 
   const style = {
@@ -25,7 +25,7 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
 
     return (
-      <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2">
+      <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2" onClick={(e) => e.stopPropagation()}>
         <MapPin className="h-4 w-4" />
         {location}
       </a>
@@ -34,7 +34,7 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
-      <Card className="hover:shadow-md transition-shadow">
+      <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => onClick(activity)}>
         <CardContent className="flex items-start p-4 gap-4">
           <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
@@ -77,7 +77,10 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => onRemove(activity.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove(activity.id);
+                }}
               >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Remove activity</span>

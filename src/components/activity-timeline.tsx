@@ -10,9 +10,10 @@ interface ActivityTimelineProps {
   setActivities: React.Dispatch<React.SetStateAction<Activity[]>>;
   removeActivity: (id: string) => void;
   city: string | null;
+  onActivityClick: (activity: Activity) => void;
 }
 
-export function ActivityTimeline({ activities, setActivities, removeActivity, city }: ActivityTimelineProps) {
+export function ActivityTimeline({ activities, setActivities, removeActivity, city, onActivityClick }: ActivityTimelineProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -37,7 +38,7 @@ export function ActivityTimeline({ activities, setActivities, removeActivity, ci
       <SortableContext items={activities} strategy={verticalListSortingStrategy}>
         <div className="space-y-4">
           {activities.map(activity => (
-            <ActivityCard key={activity.id} activity={activity} onRemove={removeActivity} city={city} />
+            <ActivityCard key={activity.id} activity={activity} onRemove={removeActivity} city={city} onClick={onActivityClick} />
           ))}
         </div>
       </SortableContext>

@@ -11,6 +11,7 @@ import { MainHeader } from '@/components/main-header';
 import { ActivityTimeline } from '@/components/activity-timeline';
 import { AddActivityDialog } from '@/components/add-activity-dialog';
 import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
+import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
 import { Button } from '@/components/ui/button';
 import { Bot, Plus, Telescope } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -20,6 +21,7 @@ export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const [isAiSheetOpen, setAiSheetOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   
   const { city: detectedCity, loading: locationLoading } = useLocation();
   const [currentCity, setCurrentCity] = useState<string | null>(null);
@@ -118,6 +120,13 @@ export default function Home() {
     }
   };
 
+  const handleActivityClick = (activity: Activity) => {
+    if (activity.imageUrl) {
+      setSelectedActivity(activity);
+    }
+  };
+
+
   if (!isMounted) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -156,7 +165,7 @@ export default function Home() {
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your Daily Itinerary</h1>
             {activities.length > 0 ? (
-              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={currentCity} />
+              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={currentCity} onActivityClick={handleActivityClick} />
             ) : (
               <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
                 <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />
@@ -181,6 +190,16 @@ export default function Home() {
 
       <AddActivityDialog open={isAddDialogOpen} onOpenChange={setAddDialogOpen} onAddActivity={addActivity} />
       <AiSuggestionSheet open={isAiSheetOpen} onOpenChange={setAiSheetOpen} onGenerate={handleGenerateItinerary} />
+      <ActivityDetailDialog 
+        activity={selectedActivity} 
+        open={!!selectedActivity} 
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setSelectedActivity(null);
+          }
+        }}
+        city={currentCity}
+      />
     </>
   );
 }
