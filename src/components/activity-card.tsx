@@ -40,14 +40,14 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
             <GripVertical />
           </div>
           {activity.imageUrl && (
-            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-md overflow-hidden flex-shrink-0">
+            <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
               <Image
                 src={activity.imageUrl}
                 alt={activity.description}
-                fill
+                width={96}
+                height={96}
                 className="object-cover"
                 data-ai-hint={activity.imageHint}
-                sizes="(max-width: 640px) 96px, 128px"
               />
             </div>
           )}

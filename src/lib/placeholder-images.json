@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "charminar",
+      "description": "Charminar monument",
+      "imageUrl": "https://images.unsplash.com/photo-1563691282970-b2bfc1abca82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxDaGFybWluYXIlMjBtb251bWVudHxlbnwwfHx8fDE3NjE3MzUyMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "Charminar monument"
+    },
+    {
+      "id": "laad-bazaar",
+      "description": "Laad Bazaar shopping",
+      "imageUrl": "https://images.unsplash.com/photo-1716146755954-4f197a5b6031?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxMYWFkJTIwQmF6YWFyfGVufDB8fHx8MTc2MTczNTIwMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "Laad Bazaar"
+    },
+    {
+      "id": "chowmahalla-palace",
+      "description": "Chowmahalla Palace courtyard",
+      "imageUrl": "https://images.unsplash.com/photo-1671385717640-638c41f2c8d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxDaG93bWFoYWxsYSUyMFBhbGFjZXxlbnwwfHx8fDE3NjE3MzUyMDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "Chowmahalla Palace"
+    },
+    {
+      "id": "salar-jung-museum",
+      "description": "Salar Jung Museum artifacts",
+      "imageUrl": "https://images.unsplash.com/photo-1568515508702-e085ce866d7a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxTYWxhciUyMEp1bmclMjBNdXNldW18ZW58MHx8fHwxNzYxNzM1MjAxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "Salar Jung Museum"
+    },
+    {
+      "id": "moazzam-jahi-market",
+      "description": "Moazzam Jahi Market exterior",
+      "imageUrl": "https://images.unsplash.com/photo-1617219970361-2a3265a5e72b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8TW9henphbSUyMEphaGklMjBNYXJrZXR8ZW58MHx8fHwxNzYxNzM1MjAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "Moazzam Jahi Market"
+    }
+  ]
 }
