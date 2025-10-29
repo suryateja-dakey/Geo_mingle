@@ -60,7 +60,7 @@ export function ActivityCard({ activity, onRemove, city, onClick }: { activity: 
           </div>
 
           <div className="flex-grow">
-            <p className="font-medium">{activity.description}</p>
+            <p className="font-medium line-clamp-2">{activity.description}</p>
             <p className="text-sm text-muted-foreground">{activity.time}</p>
             {activity.location && (
               <LocationLink location={activity.location} city={city} />
