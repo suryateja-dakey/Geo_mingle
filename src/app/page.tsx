@@ -21,7 +21,8 @@ export default function Home() {
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const [isAiSheetOpen, setAiSheetOpen] = useState(false);
   
-  const { city } = useLocation();
+  const { city: detectedCity, loading: locationLoading } = useLocation();
+  const [currentCity, setCurrentCity] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -42,6 +43,12 @@ export default function Home() {
       localStorage.setItem('geomingle-activities', JSON.stringify(activities));
     }
   }, [activities, isMounted]);
+
+  useEffect(() => {
+    if (detectedCity) {
+      setCurrentCity(detectedCity);
+    }
+  }, [detectedCity]);
 
   const addActivity = (activity: Omit<Activity, 'id' | 'isCustom'>) => {
     setActivities(prev => [...prev, { ...activity, id: crypto.randomUUID(), isCustom: true }]);
@@ -67,11 +74,11 @@ export default function Home() {
 
 
   const handleGenerateItinerary = async (prompt: string) => {
-    if (!city || city === 'Detecting location...') {
+    if (!currentCity || locationLoading) {
       toast({
         variant: 'destructive',
         title: 'Location not found',
-        description: 'Please wait for location detection or enable permissions.',
+        description: 'Please wait for location detection or enter a location.',
       });
       return;
     }
@@ -79,7 +86,7 @@ export default function Home() {
     setAiSheetOpen(false);
 
     try {
-      const result = await generateInitialItinerary({ city, prompt });
+      const result = await generateInitialItinerary({ city: currentCity, prompt });
       
       const newActivities: Activity[] = result.activities.map(activity => ({
         ...activity,
@@ -96,8 +103,8 @@ export default function Home() {
 
       // Progressively fetch images
       newActivities.forEach(activity => {
-        if (activity.location && city) {
-          fetchImageForActivity(activity.id, `${activity.location}, ${city}`);
+        if (activity.location && currentCity) {
+          fetchImageForActivity(activity.id, `${activity.location}, ${currentCity}`);
         }
       });
 
@@ -140,12 +147,16 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-col min-h-screen">
-        <MainHeader />
+        <MainHeader 
+          city={currentCity}
+          onCityChange={setCurrentCity}
+          loading={locationLoading}
+        />
         <main className="flex-1">
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your Daily Itinerary</h1>
             {activities.length > 0 ? (
-              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={city} />
+              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={currentCity} />
             ) : (
               <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
                 <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />

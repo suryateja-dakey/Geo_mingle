@@ -1,14 +1,19 @@
 'use client';
 
-import { useLocation } from '@/hooks/use-location';
 import { Compass, MapPin, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/providers/theme-provider';
 import { Skeleton } from './ui/skeleton';
+import { Input } from './ui/input';
 
-export function MainHeader() {
+interface MainHeaderProps {
+    city: string | null;
+    loading: boolean;
+    onCityChange: (city: string) => void;
+}
+
+export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
   const { theme, setTheme } = useTheme();
-  const { city, loading } = useLocation();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -19,9 +24,18 @@ export function MainHeader() {
         </a>
         
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-[200px]">
             <MapPin className="h-4 w-4" />
-            {loading ? <Skeleton className="h-4 w-24" /> : <span>{city}</span>}
+            {loading ? (
+                <Skeleton className="h-4 w-24" /> 
+            ) : (
+                <Input 
+                    value={city || ''}
+                    onChange={(e) => onCityChange(e.target.value)}
+                    placeholder="Enter a city..."
+                    className="h-8 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+            )}
           </div>
           <Button
             variant="ghost"
