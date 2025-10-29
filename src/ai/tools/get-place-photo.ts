@@ -4,7 +4,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GetPlacePhotoUrlInputSchema = z.object({
-  query: z.string().describe('The search query for the place (e.g., "Charminar, Hyderabad").'),
+  query: z.string().optional().describe('The search query for the place (e.g., "Charminar, Hyderabad").'),
 });
 
 const GetPlacePhotoUrlOutputSchema = z.string().url().optional().describe('The URL of a photo of the place, or a placeholder if not found.');
@@ -18,10 +18,14 @@ export const getPlacePhotoUrlTool = ai.defineTool(
   },
   async ({query}) => {
     const apiKey = process.env.GOOGLE_PLACES_API_KEY;
-    const placeholderUrl = `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
+    const placeholderUrl = `https://picsum.photos/seed/${query ? query.replace(/\s+/g, '-') : 'placeholder'}/400/400`;
 
     if (!apiKey) {
       console.warn('GOOGLE_PLACES_API_KEY is not set. Returning placeholder.');
+      return placeholderUrl;
+    }
+    
+    if (!query) {
       return placeholderUrl;
     }
 
