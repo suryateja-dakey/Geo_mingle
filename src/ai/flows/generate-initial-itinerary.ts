@@ -20,7 +20,7 @@ const ActivitySchema = z.object({
   time: z.string().describe('The time of the activity in a friendly format (e.g., "9:00 AM", "1:30 PM").'),
   description: z.string().describe('A description of the activity.'),
   location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Louvre Museum"). This should be just the name of the place, not the full address.'),
-  imageUrl: z.string().url().optional().describe('A placeholder image URL for the location from picsum.photos. The URL should be in the format https://picsum.photos/seed/UNIQUE_SEED/400/400.'),
+  imageUrl: z.string().url().optional().describe('A placeholder image URL for the location. Use https://source.unsplash.com/400x400/?<keyword> with a relevant keyword based on the location.'),
   imageHint: z.string().optional().describe('One or two keywords describing the location for a future image search (e.g., "Eiffel Tower"). This should be based on the location field.'),
 });
 
@@ -43,7 +43,7 @@ For each activity in the itinerary, provide the following structured information
 1. 'time': The time for the activity.
 2. 'description': A clear description of what the activity is.
 3. 'location': The specific name of the place, monument, or venue (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"). If no specific venue is associated, you can leave this blank.
-4. 'imageUrl': A placeholder image URL for the location. Use picsum.photos with a unique random seed for each image, with dimensions 400x400 (e.g., https://picsum.photos/seed/123/400/400).
+4. 'imageUrl': A placeholder image URL from Unsplash. Use the format https://source.unsplash.com/400x400/?<keyword>, replacing <keyword> with the best search term for the 'location'. For example, for "Eiffel Tower", use https://source.unsplash.com/400x400/?Eiffel+Tower.
 5. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later. This hint should directly relate to the 'location' field. For example, if the location is "Charminar", the hint should be "Charminar".
 
 Return the entire itinerary as an array of these activity objects.`,
