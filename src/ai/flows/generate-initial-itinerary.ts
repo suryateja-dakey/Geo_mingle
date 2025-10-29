@@ -47,7 +47,7 @@ For each activity in the itinerary, provide the following structured information
 3. 'location': The specific name of the place, monument, or venue (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"). If no specific venue is associated, you can leave this blank.
 4. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later. This hint should directly relate to the 'location' field. For example, if the location is "Charminar", the hint should be "Charminar".
 
-For each activity that has a 'location', you MUST use the 'getPlacePhotoUrl' tool to find a photo URL for that location. The query for the tool should be the location name combined with the city (e.g., "Charminar, Hyderabad"). The resulting URL should be placed in the 'imageUrl' field.
+For every activity that has a 'location' field, you MUST use the 'getPlacePhotoUrl' tool to find a photo URL. The 'query' for the tool MUST be the location combined with the city (e.g., "Charminar, Hyderabad"). Place the resulting URL in the 'imageUrl' field.
 
 Return the entire itinerary as an array of these activity objects.`,
 });

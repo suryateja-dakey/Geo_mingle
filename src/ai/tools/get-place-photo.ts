@@ -34,14 +34,14 @@ export const getPlacePhotoUrlTool = ai.defineTool(
       const findPlaceResponse = await fetch(findPlaceUrl.toString());
       if (!findPlaceResponse.ok) {
         console.error('Error finding place:', await findPlaceResponse.text());
-        return undefined;
+        return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
       }
       const findPlaceData = await findPlaceResponse.json();
 
       const photoReference = findPlaceData.candidates?.[0]?.photos?.[0]?.photo_reference;
 
       if (!photoReference) {
-        console.log(`No photo found for query: "${query}"`);
+        console.log(`No photo found for query: "${query}". Returning placeholder.`);
         return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
       }
 
@@ -55,7 +55,7 @@ export const getPlacePhotoUrlTool = ai.defineTool(
 
     } catch (error) {
       console.error('Error in getPlacePhotoUrl tool:', error);
-      return undefined;
+      return `https://picsum.photos/seed/${query.replace(/\s+/g, '-')}/400/400`;
     }
   }
 );
