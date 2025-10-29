@@ -34,22 +34,23 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
-      <Card className="hover:shadow-md transition-shadow overflow-hidden">
-        {activity.imageUrl && (
-            <div className="relative aspect-video">
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="flex items-start p-4 gap-4">
+          <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
+            <GripVertical />
+          </div>
+          {activity.imageUrl && (
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-md overflow-hidden flex-shrink-0">
               <Image 
                 src={activity.imageUrl} 
                 alt={activity.description}
                 fill
                 className="object-cover"
                 data-ai-hint={activity.imageHint}
+                sizes="(max-width: 640px) 96px, 128px"
               />
             </div>
         )}
-        <CardContent className="flex items-start p-4 gap-4">
-          <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
-            <GripVertical />
-          </div>
           <div className="flex-grow">
             <p className="font-medium">{activity.description}</p>
             <p className="text-sm text-muted-foreground">{activity.time}</p>
@@ -57,21 +58,23 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
               <LocationLink location={activity.location} city={city} />
             )}
           </div>
-          <div className="flex items-center gap-2">
-            {activity.isCustom ? (
-              <Badge variant="outline">Custom</Badge>
-            ) : (
-              <Badge variant="secondary">AI</Badge>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => onRemove(activity.id)}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Remove activity</span>
-            </Button>
+          <div className="flex flex-col items-end gap-2">
+             <div className="flex items-center gap-2">
+              {activity.isCustom ? (
+                <Badge variant="outline">Custom</Badge>
+              ) : (
+                <Badge variant="secondary">AI</Badge>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => onRemove(activity.id)}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Remove activity</span>
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -20,8 +20,8 @@ const ActivitySchema = z.object({
   time: z.string().describe('The time of the activity in a friendly format (e.g., "9:00 AM", "1:30 PM").'),
   description: z.string().describe('A description of the activity.'),
   location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Louvre Museum"). This should be just the name of the place, not the full address.'),
-  imageUrl: z.string().url().optional().describe('A placeholder image URL for the location from picsum.photos. The URL should be in the format https://picsum.photos/seed/UNIQUE_SEED/600/400.'),
-  imageHint: z.string().optional().describe('One or two keywords describing the location for a future image search (e.g., "Eiffel Tower").'),
+  imageUrl: z.string().url().optional().describe('A placeholder image URL for the location from picsum.photos. The URL should be in the format https://picsum.photos/seed/UNIQUE_SEED/400/400.'),
+  imageHint: z.string().optional().describe('One or two keywords describing the location for a future image search (e.g., "Eiffel Tower"). This should be based on the location field.'),
 });
 
 const GenerateInitialItineraryOutputSchema = z.object({
@@ -43,8 +43,8 @@ For each activity in the itinerary, provide the following structured information
 1. 'time': The time for the activity.
 2. 'description': A clear description of what the activity is.
 3. 'location': The specific name of the place, monument, or venue (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"). If no specific venue is associated, you can leave this blank.
-4. 'imageUrl': A placeholder image URL for the location. Use picsum.photos with a unique random seed for each image (e.g., https://picsum.photos/seed/123/600/400).
-5. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later.
+4. 'imageUrl': A placeholder image URL for the location. Use picsum.photos with a unique random seed for each image, with dimensions 400x400 (e.g., https://picsum.photos/seed/123/400/400).
+5. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later. This hint should directly relate to the 'location' field. For example, if the location is "Charminar", the hint should be "Charminar".
 
 Return the entire itinerary as an array of these activity objects.`,
 });
