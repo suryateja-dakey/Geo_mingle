@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {getPlacePhotoUrlTool} from '@/ai/tools/get-place-photo';
 import {z} from 'genkit';
 
 const GenerateInitialItineraryInputSchema = z.object({
@@ -20,8 +21,8 @@ const ActivitySchema = z.object({
   time: z.string().describe('The time of the activity in a friendly format (e.g., "9:00 AM", "1:30 PM").'),
   description: z.string().describe('A description of the activity.'),
   location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Louvre Museum"). This should be just the name of the place, not the full address.'),
-  imageUrl: z.string().url().optional().describe('A placeholder image URL for the location. Use https://picsum.photos/seed/<seed>/400/400 where <seed> is a relevant keyword based on the location (e.g., eiffel-tower).'),
-  imageHint: z.string().optional().describe('One or two keywords describing the location for a future image search (e.g., "Eiffel Tower"). This should be based on the location field.'),
+  imageUrl: z.string().url().optional().describe('A photo URL for the location. This will be populated by the getPlacePhotoUrl tool.'),
+  imageHint: z.string().optional().describe('One or two keywords describing the location for an image search (e.g., "Eiffel Tower"). This should be based on the location field.'),
 });
 
 const GenerateInitialItineraryOutputSchema = z.object({
@@ -37,14 +38,16 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   name: 'generateInitialItineraryPrompt',
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
+  tools: [getPlacePhotoUrlTool],
   prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
 
 For each activity in the itinerary, provide the following structured information:
 1. 'time': The time for the activity.
 2. 'description': A clear description of what the activity is.
 3. 'location': The specific name of the place, monument, or venue (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"). If no specific venue is associated, you can leave this blank.
-4. 'imageUrl': A placeholder image URL from Picsum Photos. Use the format https://picsum.photos/seed/<seed>/400/400, replacing <seed> with a URL-friendly keyword for the 'location' (e.g., for "Eiffel Tower", use "eiffel-tower").
-5. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later. This hint should directly relate to the 'location' field. For example, if the location is "Charminar", the hint should be "Charminar".
+4. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later. This hint should directly relate to the 'location' field. For example, if the location is "Charminar", the hint should be "Charminar".
+
+For each activity that has a 'location', you MUST use the 'getPlacePhotoUrl' tool to find a photo URL for that location. Include the full city and country for best results. The resulting URL should be placed in the 'imageUrl' field.
 
 Return the entire itinerary as an array of these activity objects.`,
 });
