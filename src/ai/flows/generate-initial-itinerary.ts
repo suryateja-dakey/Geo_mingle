@@ -43,12 +43,10 @@ For each activity in the itinerary, provide the following structured information
 2. 'description': A clear description of what the activity is.
 
 If and only if there is a specific, named location for an activity (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"), you must also provide:
-3. 'location': The specific name of the place, monument, or venue.
+3. 'location': The specific, concise name of the place, monument, or venue ONLY. Do NOT add any other descriptive text or commentary in this field. For example, it should be "Louvre Museum", not "The world-famous Louvre Museum".
 4. 'imageHint': One or two keywords that describe the location, which can be used for an image search later. This hint should directly relate to the 'location' field.
 
-If an activity does not have a specific location (like "lunch at a local restaurant"), you MUST OMIT the 'location' and 'imageHint' fields for that activity.
-
-Do NOT include an 'imageUrl' field. This will be handled separately.`,
+If an activity does not have a specific location (like "lunch at a local restaurant"), you MUST OMIT the 'location' and 'imageHint' fields for that activity.`,
 });
 
 const generateInitialItineraryFlow = ai.defineFlow(
