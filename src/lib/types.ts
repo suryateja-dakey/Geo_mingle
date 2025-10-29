@@ -4,4 +4,6 @@ export type Activity = {
   description: string;
   isCustom: boolean;
   location?: string;
+  imageUrl?: string;
+  imageHint?: string;
 };

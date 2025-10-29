@@ -120,7 +120,7 @@ export default function Home() {
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your Daily Itinerary</h1>
             {activities.length > 0 ? (
-              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} />
+              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={city} />
             ) : (
               <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
                 <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />

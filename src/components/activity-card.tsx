@@ -1,14 +1,16 @@
 'use client';
 
 import type { Activity } from '@/lib/types';
+import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { GripVertical, X, MapPin } from 'lucide-react';
 import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
 
-export function ActivityCard({ activity, onRemove }: { activity: Activity, onRemove: (id: string) => void }) {
+export function ActivityCard({ activity, onRemove, city }: { activity: Activity, onRemove: (id: string) => void, city: string | null }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: activity.id });
 
   const style = {
@@ -16,8 +18,8 @@ export function ActivityCard({ activity, onRemove }: { activity: Activity, onRem
     transition,
   };
 
-  const LocationLink = ({ location, city }: { location?: string, city: string }) => {
-    if (!location) return null;
+  const LocationLink = ({ location, city }: { location?: string, city: string | null }) => {
+    if (!location || !city) return null;
 
     const query = encodeURIComponent(`${location}, ${city}`);
     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
@@ -32,7 +34,18 @@ export function ActivityCard({ activity, onRemove }: { activity: Activity, onRem
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
-      <Card className="hover:shadow-md transition-shadow">
+      <Card className="hover:shadow-md transition-shadow overflow-hidden">
+        {activity.imageUrl && (
+            <div className="relative aspect-video">
+              <Image 
+                src={activity.imageUrl} 
+                alt={activity.description}
+                fill
+                className="object-cover"
+                data-ai-hint={activity.imageHint}
+              />
+            </div>
+        )}
         <CardContent className="flex items-start p-4 gap-4">
           <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
@@ -41,7 +54,7 @@ export function ActivityCard({ activity, onRemove }: { activity: Activity, onRem
             <p className="font-medium">{activity.description}</p>
             <p className="text-sm text-muted-foreground">{activity.time}</p>
             {activity.location && (
-              <LocationLink location={activity.location} city="" />
+              <LocationLink location={activity.location} city={city} />
             )}
           </div>
           <div className="flex items-center gap-2">
