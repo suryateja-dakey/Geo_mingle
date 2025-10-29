@@ -8,7 +8,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {getPlacePhotoUrlTool} from '@/ai/tools/get-place-photo';
 import {z} from 'genkit';
 
 const GenerateInitialItineraryInputSchema = z.object({
@@ -21,7 +20,6 @@ const ActivitySchema = z.object({
   time: z.string().describe('The time of the activity in a friendly format (e.g., "9:00 AM", "1:30 PM").'),
   description: z.string().describe('A description of the activity.'),
   location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Louvre Museum"). This should be just the name of the place, not the full address.'),
-  imageUrl: z.string().url().optional().describe('A photo URL for the location. This will be populated by the getPlacePhotoUrl tool.'),
   imageHint: z.string().optional().describe('One or two keywords describing the location for an image search (e.g., "Eiffel Tower"). This should be based on the location field.'),
 });
 
@@ -38,7 +36,6 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   name: 'generateInitialItineraryPrompt',
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
-  tools: [getPlacePhotoUrlTool],
   prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
 
 For each activity in the itinerary, provide the following structured information:
@@ -47,13 +44,11 @@ For each activity in the itinerary, provide the following structured information
 
 If and only if there is a specific, named location for an activity (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"), you must also provide:
 3. 'location': The specific name of the place, monument, or venue.
-4. 'imageHint': One or two keywords that describe the location, which can be used for a real image search later. This hint should directly relate to the 'location' field.
+4. 'imageHint': One or two keywords that describe the location, which can be used for an image search later. This hint should directly relate to the 'location' field.
 
-For every activity that has a 'location' field, you MUST use the 'getPlacePhotoUrl' tool to find a photo URL. The 'query' for the tool MUST be the location combined with the city (e.g., "Charminar, Hyderabad"). Place the resulting URL in the 'imageUrl' field.
+If an activity does not have a specific location (like "lunch at a local restaurant"), you MUST OMIT the 'location' and 'imageHint' fields for that activity.
 
-If an activity does not have a specific location (like "lunch at a local restaurant"), you MUST OMIT the 'location', 'imageHint', and 'imageUrl' fields for that activity.
-
-Return the entire itinerary as an array of these activity objects.`,
+Do NOT include an 'imageUrl' field. This will be handled separately.`,
 });
 
 const generateInitialItineraryFlow = ai.defineFlow(

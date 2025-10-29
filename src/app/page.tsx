@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import type { Activity } from '@/lib/types';
 import { useLocation } from '@/hooks/use-location';
 import { generateInitialItinerary } from '@/ai/flows/generate-initial-itinerary';
+import { getActivityPhoto } from '@/ai/flows/get-activity-photo';
 import { useToast } from '@/hooks/use-toast';
 
 import { MainHeader } from '@/components/main-header';
@@ -50,6 +51,20 @@ export default function Home() {
   const removeActivity = (id: string) => {
     setActivities(prev => prev.filter(activity => activity.id !== id));
   };
+  
+  const fetchImageForActivity = async (activityId: string, query: string) => {
+    try {
+      const imageUrl = await getActivityPhoto({ query });
+      if (imageUrl) {
+        setActivities(prev =>
+          prev.map(act => (act.id === activityId ? { ...act, imageUrl } : act))
+        );
+      }
+    } catch (error) {
+      console.error(`Failed to fetch image for ${query}:`, error);
+    }
+  };
+
 
   const handleGenerateItinerary = async (prompt: string) => {
     if (!city || city === 'Detecting location...') {
@@ -61,6 +76,8 @@ export default function Home() {
       return;
     }
 
+    setAiSheetOpen(false);
+
     try {
       const result = await generateInitialItinerary({ city, prompt });
       
@@ -71,11 +88,19 @@ export default function Home() {
       }));
 
       setActivities(prev => [...prev, ...newActivities]);
-      setAiSheetOpen(false);
+      
       toast({
         title: 'Itinerary generated!',
-        description: `Added ${newActivities.length} new activities to your timeline.`,
+        description: `Added ${newActivities.length} new activities. Fetching images...`,
       });
+
+      // Progressively fetch images
+      newActivities.forEach(activity => {
+        if (activity.location && city) {
+          fetchImageForActivity(activity.id, `${activity.location}, ${city}`);
+        }
+      });
+
     } catch (error) {
       console.error('AI generation failed', error);
       toast({

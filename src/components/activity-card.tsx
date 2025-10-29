@@ -6,7 +6,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GripVertical, X, MapPin } from 'lucide-react';
+import { GripVertical, X, MapPin, ImageIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 
@@ -39,18 +39,26 @@ export function ActivityCard({ activity, onRemove, city }: { activity: Activity,
           <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
           </div>
-          {activity.imageUrl && (
-            <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
-              <Image
-                src={activity.imageUrl}
-                alt={activity.description}
-                width={96}
-                height={96}
-                className="object-cover"
-                data-ai-hint={activity.imageHint}
-              />
-            </div>
-          )}
+          
+          <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0 bg-muted flex items-center justify-center">
+            {activity.imageUrl ? (
+                <Image
+                    src={activity.imageUrl}
+                    alt={activity.description}
+                    width={96}
+                    height={96}
+                    className="object-cover"
+                    data-ai-hint={activity.imageHint}
+                />
+            ) : (
+                activity.location ? (
+                    <Skeleton className="w-full h-full" />
+                ) : (
+                    <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                )
+            )}
+          </div>
+
           <div className="flex-grow">
             <p className="font-medium">{activity.description}</p>
             <p className="text-sm text-muted-foreground">{activity.time}</p>
