@@ -3,7 +3,7 @@
 import { useLocation } from '@/hooks/use-location';
 import { Compass, MapPin, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTheme } from 'next-themes';
+import { useTheme } from '@/components/providers/theme-provider';
 import { Skeleton } from './ui/skeleton';
 
 export function MainHeader() {
