@@ -17,7 +17,7 @@ const GenerateInitialItineraryInputSchema = z.object({
 export type GenerateInitialItineraryInput = z.infer<typeof GenerateInitialItineraryInputSchema>;
 
 const GenerateInitialItineraryOutputSchema = z.object({
-  itinerary: z.string().describe('A detailed itinerary for the day, including activities, locations, and times.'),
+  itinerary: z.string().describe('A detailed itinerary for the day, including activities, locations, and times. Each activity should be on a new line, starting with the time (e.g., "9:00 AM: Visit the museum").'),
 });
 export type GenerateInitialItineraryOutput = z.infer<typeof GenerateInitialItineraryOutputSchema>;
 
@@ -29,7 +29,7 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   name: 'generateInitialItineraryPrompt',
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
-  prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}. The itinerary should include specific activities, locations, and times. Make the itinerary concise and easy to follow.`,
+  prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}. The itinerary should include specific activities and locations. Each activity must be on a new line and start with a time, like "9:00 AM: Activity Description". Make the itinerary concise and easy to follow.`,
 });
 
 const generateInitialItineraryFlow = ai.defineFlow(

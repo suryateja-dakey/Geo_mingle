@@ -47,6 +47,10 @@ export default function Home() {
     setAddDialogOpen(false);
   };
 
+  const removeActivity = (id: string) => {
+    setActivities(prev => prev.filter(activity => activity.id !== id));
+  };
+
   const handleGenerateItinerary = async (prompt: string) => {
     if (!city || city === 'Detecting location...') {
       toast({
@@ -60,11 +64,24 @@ export default function Home() {
     try {
       const result = await generateInitialItinerary({ city, prompt });
       const newActivities = result.itinerary.split('\n')
-        .filter(line => line.trim() !== '')
+        .filter(line => line.trim() !== '' && line.trim().length > 5) // ensure lines are not empty and have some content
         .map((line) => {
-          const timeMatch = line.match(/^(\d{1,2}:\d{2}\s?[AP]M?)/i);
-          const time = timeMatch ? timeMatch[1].trim() : "Anytime";
-          const description = timeMatch ? line.substring(timeMatch[0].length).trim().replace(/^-/,'').trim() : line;
+          // Regex to capture time (e.g., "9:00 AM", "14:30") and description
+          const timeMatch = line.match(/^(.*?):\s/);
+          let time = "Anytime";
+          let description = line;
+
+          if (timeMatch && timeMatch[1]) {
+            time = timeMatch[1].trim();
+            description = line.substring(timeMatch[0].length).trim();
+          } else {
+             const fallbackTimeMatch = line.match(/^(\d{1,2}:\d{2}\s?[AP]M?)/i);
+             if(fallbackTimeMatch) {
+                time = fallbackTimeMatch[1].trim();
+                description = line.substring(fallbackTimeMatch[0].length).trim().replace(/^-/,'').trim();
+             }
+          }
+          
           return { id: crypto.randomUUID(), time, description, isCustom: false };
         });
 
@@ -118,7 +135,7 @@ export default function Home() {
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your Daily Itinerary</h1>
             {activities.length > 0 ? (
-              <ActivityTimeline activities={activities} setActivities={setActivities} />
+              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} />
             ) : (
               <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
                 <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />

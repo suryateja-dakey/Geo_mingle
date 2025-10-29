@@ -8,9 +8,10 @@ import { ActivityCard } from './activity-card';
 interface ActivityTimelineProps {
   activities: Activity[];
   setActivities: React.Dispatch<React.SetStateAction<Activity[]>>;
+  removeActivity: (id: string) => void;
 }
 
-export function ActivityTimeline({ activities, setActivities }: ActivityTimelineProps) {
+export function ActivityTimeline({ activities, setActivities, removeActivity }: ActivityTimelineProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -35,7 +36,7 @@ export function ActivityTimeline({ activities, setActivities }: ActivityTimeline
       <SortableContext items={activities} strategy={verticalListSortingStrategy}>
         <div className="space-y-4">
           {activities.map(activity => (
-            <ActivityCard key={activity.id} activity={activity} />
+            <ActivityCard key={activity.id} activity={activity} onRemove={removeActivity} />
           ))}
         </div>
       </SortableContext>
