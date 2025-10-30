@@ -76,7 +76,7 @@ export function ActivityCard({ activity, onRemove, city, onClick }: { activity: 
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="h-7 w-7 opacity-10 group-hover:opacity-100 transition-opacity"
                 onClick={(e) => {
                   e.stopPropagation();
                   onRemove(activity.id);
