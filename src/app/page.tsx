@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, Fragment } from 'react';
@@ -24,6 +25,8 @@ import { Separator } from '@/components/ui/separator';
 import { ShareItineraryDialog } from '@/components/share-itinerary-dialog';
 import { CityProvider } from '@/hooks/use-city-provider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 function HomePageContent() {
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
@@ -37,6 +40,7 @@ function HomePageContent() {
   const { city: detectedCity, loading: locationLoading } = useLocation();
   const [currentCity, setCurrentCity] = useState<string | null>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -364,32 +368,46 @@ function HomePageContent() {
         </footer>
       </div>
       
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 md:bottom-6 md:right-6">
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="icon" variant="secondary" className="rounded-full shadow-lg h-14 w-14" onClick={() => setAddDialogOpen(true)}>
-                <Plus className="h-7 w-7" />
-                <span className="sr-only">Add Event</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Add Event</p>
-            </TooltipContent>
-          </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button 
+                        size="icon" 
+                        variant="secondary" 
+                        className="rounded-full shadow-lg h-14 w-14" 
+                        onClick={() => setAddDialogOpen(true)}
+                    >
+                        <Plus className="h-7 w-7" />
+                        <span className="sr-only">Add Event</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Add Event</p>
+                </TooltipContent>
+            </Tooltip>
         </TooltipProvider>
+
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="icon" className="rounded-full shadow-lg h-14 w-14 animate-pulse" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
-                <Bot className="h-7 w-7" />
-                <span className="sr-only">Suggest a plan</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Suggest a plan</p>
-            </TooltipContent>
-          </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button 
+                        onClick={() => setAiSheetOpen(true)} 
+                        disabled={isGenerating}
+                        className={cn(
+                            "rounded-full shadow-lg h-14 animate-pulse",
+                            isMobile ? "w-14" : "px-6"
+                        )}
+                    >
+                        <Bot className={cn("h-7 w-7", !isMobile && "mr-2")} />
+                        {!isMobile && 'Plan with AI'}
+                        <span className="sr-only">Suggest a plan</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Suggest a plan</p>
+                </TooltipContent>
+            </Tooltip>
         </TooltipProvider>
       </div>
 
@@ -426,5 +444,7 @@ export default function Home() {
     </CityProvider>
   )
 }
+
+    
 
     
