@@ -1,19 +1,13 @@
 'use client';
 
-import Lottie from "lottie-react";
-import animationData from '@/lib/lottie-animation.json';
+import { Loader2 } from 'lucide-react';
 
 export function GeneratingLoader() {
-  // By assigning the imported data directly, we ensure it's available.
-  const animation = animationData;
-
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-48 h-48">
-            <Lottie animationData={animation} loop={true} />
-        </div>
-        <p className="text-lg font-medium text-foreground -mt-4">Crafting your itinerary...</p>
+        <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        <p className="text-lg font-medium text-foreground">Crafting your itinerary...</p>
         <p className="text-sm text-muted-foreground">This may take a few moments.</p>
       </div>
     </div>
