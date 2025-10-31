@@ -40,6 +40,8 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   model: googleAI.model('gemini-2.5-flash'),
   prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
 
+Your itinerary should, whenever possible, include suggestions for Breakfast, Lunch, and Dinner.
+
 If the user prompt asks for "3 to 5 activities", you must generate an itinerary with a total of 3 to 5 activities.
 
 For each activity in the itinerary, provide the following structured information:
@@ -50,7 +52,7 @@ If an activity has a specific, named location (e.g., "Eiffel Tower", "Central Pa
 3. 'location': The specific, concise name of the place.
 4. 'imageHint': One or two keywords for an image search related to the 'location'.
 
-If the activity is a meal like lunch or dinner, you MUST suggest a specific, well-known restaurant in that city and use its name for the 'location'. For example, if suggesting biryani in Hyderabad, you might set the location to "Paradise Biryani".
+If the activity is a meal like breakfast, lunch or dinner, you MUST suggest a specific, well-known restaurant in that city and use its name for the 'location'. For example, if suggesting biryani in Hyderabad, you might set the location to "Paradise Biryani".
 
 If an activity does not have a specific location (e.g., "take a walk"), you MUST OMIT the 'location' and 'imageHint' fields. Do NOT invent locations.`,
 });

@@ -7,7 +7,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GripVertical, X, MapPin, ImageIcon } from 'lucide-react';
+import { GripVertical, X, MapPin, ImageIcon, UtensilsCrossed } from 'lucide-react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 import { Input } from './ui/input';
@@ -56,6 +56,8 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
       setTimeValue(activity.time);
     }
   };
+  
+  const isMeal = /breakfast|lunch|dinner/i.test(activity.description);
 
   const LocationLink = ({ location, city }: { location?: string, city: string | null }) => {
     if (!location || !city) return null;
@@ -91,7 +93,11 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
                 />
             ) : (
                 activity.location ? (
-                    <Skeleton className="w-full h-full" />
+                    isMeal ? (
+                        <UtensilsCrossed className="w-8 h-8 text-muted-foreground" />
+                    ) : (
+                        <Skeleton className="w-full h-full" />
+                    )
                 ) : (
                     <ImageIcon className="w-8 h-8 text-muted-foreground" />
                 )
@@ -99,7 +105,10 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
           </div>
 
           <div className="flex-grow">
-            <p className="font-medium line-clamp-2">{activity.description}</p>
+            <div className="flex items-center gap-2">
+              {isMeal && <UtensilsCrossed className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+              <p className="font-medium line-clamp-2">{activity.description}</p>
+            </div>
             {isEditingTime ? (
               <Input
                 ref={timeInputRef}
