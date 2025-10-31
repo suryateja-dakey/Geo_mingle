@@ -378,32 +378,34 @@ function HomePageContent() {
         </main>
 
         <footer className="py-6 mt-auto bg-background/50">
-          <div className="container flex flex-col items-center justify-center text-sm text-muted-foreground">
-            <p>Developed by Suryateja Dakey &copy; {new Date().getFullYear()}</p>
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-2">
-              <a href="https://www.linkedin.com/in/suryateja-dakey/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#0A66C2" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
-                LinkedIn
-              </a>
-              <a href="https://wa.me/918328166464" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366" xmlns="http://www.w3.org/2000/svg"><path d="M19.782 14.507c-.381-.192-2.24-1.104-2.588-1.23-.348-.124-.6-.192-.853.125-.252.316-.978 1.229-1.2 1.481-.222.253-.444.282-.825.09-1.578-.783-2.8-1.48-3.883-2.771-1.01-1.21-1.623-2.316-1.874-2.923-.252-.607-.024-.91.204-1.168.205-.239.444-.627.666-.939.222-.312.296-.525.444-.88.148-.354.074-.656-.037-.85-.11-.192-.852-2.046-1.168-2.802-.308-.73-.625-.63-.852-.642-.21-.012-.444-.012-.666-.012-.222 0-.592.083-.907.41-.315.328-1.2.978-1.2 2.38 0 1.402 1.23 2.76 1.402 2.964.173.204 2.422 3.82 5.86 5.176 3.44 1.356 3.44 1.012 4.052.948.612-.064 1.838-.752 2.1-1.459.261-.707.261-1.31.185-1.437-.074-.125-.296-.193-.678-.386zM12.002.431C5.372.431 0 5.802 0 12.432c0 2.29.608 4.47 1.714 6.34L.055 23.568l4.982-1.658a11.943 11.943 0 0 0 6.965 1.94h.001c6.63 0 12-5.37 12-12.001C24.002 5.802 18.632.431 12.002.431z"/></svg>
-                WhatsApp
-              </a>
-              <a href="mailto:suryateja.dakey@gmail.com" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-                <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <g fill="none">
-                    <path d="M2.5 4.5h19A1.5 1.5 0 0 1 23 6v12a1.5 1.5 0 0 1-1.5 1.5h-19A1.5 1.5 0 0 1 1 18V6a1.5 1.5 0 0 1 1.5-1.5z" fill="#D44638"/>
-                    <path d="M5.503 7.625c.34-.334.82-.472 1.252-.39.405.076.78.33 1.08.694l3.12 3.649c.2.23.47.36.75.36s.55-.13.75-.36l3.12-3.649a1.5 1.5 0 0 1 2.332 1.934l-3.616 4.228c-.28.328-.68.514-1.1.514s-.82-.186-1.1-.514L3.171 9.56a1.5 1.5 0 0 1 2.332-1.934z" fill="#fff"/>
-                  </g>
-                </svg>
-                Email
-              </a>
-            </div>
-             <div className="mt-4">
-              <Button variant="ghost" onClick={handleInvite} className="inline-flex items-center gap-1.5">
-                <Send className="h-4 w-4" />
-                Invite a Friend
-              </Button>
+          <div className="container">
+            <div className="flex flex-col items-center justify-center text-sm text-muted-foreground">
+              <p>Developed by Suryateja Dakey &copy; {new Date().getFullYear()}</p>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-2">
+                <a href="https://www.linkedin.com/in/suryateja-dakey/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#0A66C2" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
+                  LinkedIn
+                </a>
+                <a href="https://wa.me/918328166464" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366" xmlns="http://www.w3.org/2000/svg"><path d="M19.782 14.507c-.381-.192-2.24-1.104-2.588-1.23-.348-.124-.6-.192-.853.125-.252.316-.978 1.229-1.2 1.481-.222.253-.444.282-.825.09-1.578-.783-2.8-1.48-3.883-2.771-1.01-1.21-1.623-2.316-1.874-2.923-.252-.607-.024-.91.204-1.168.205-.239.444-.627.666-.939.222-.312.296-.525.444-.88.148-.354.074-.656-.037-.85-.11-.192-.852-2.046-1.168-2.802-.308-.73-.625-.63-.852-.642-.21-.012-.444-.012-.666-.012-.222 0-.592.083-.907.41-.315.328-1.2.978-1.2 2.38 0 1.402 1.23 2.76 1.402 2.964.173.204 2.422 3.82 5.86 5.176 3.44 1.356 3.44 1.012 4.052.948.612-.064 1.838-.752 2.1-1.459.261-.707.261-1.31.185-1.437-.074-.125-.296-.193-.678-.386zM12.002.431C5.372.431 0 5.802 0 12.432c0 2.29.608 4.47 1.714 6.34L.055 23.568l4.982-1.658a11.943 11.943 0 0 0 6.965 1.94h.001c6.63 0 12-5.37 12-12.001C24.002 5.802 18.632.431 12.002.431z"/></svg>
+                  WhatsApp
+                </a>
+                <a href="mailto:suryateja.dakey@gmail.com" className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+                  <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="none">
+                      <path d="M2.5 4.5h19A1.5 1.5 0 0 1 23 6v12a1.5 1.5 0 0 1-1.5 1.5h-19A1.5 1.5 0 0 1 1 18V6a1.5 1.5 0 0 1 1.5-1.5z" fill="#D44638"/>
+                      <path d="M5.503 7.625c.34-.334.82-.472 1.252-.39.405.076.78.33 1.08.694l3.12 3.649c.2.23.47.36.75.36s.55-.13.75-.36l3.12-3.649a1.5 1.5 0 0 1 2.332 1.934l-3.616 4.228c-.28.328-.68.514-1.1.514s-.82-.186-1.1-.514L3.171 9.56a1.5 1.5 0 0 1 2.332-1.934z" fill="#fff"/>
+                    </g>
+                  </svg>
+                  Email
+                </a>
+              </div>
+              <div className="mt-4">
+                <Button variant="ghost" onClick={handleInvite} className="inline-flex items-center gap-1.5">
+                  <Send className="h-4 w-4" />
+                  Invite a Friend
+                </Button>
+              </div>
             </div>
           </div>
         </footer>
