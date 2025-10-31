@@ -20,6 +20,7 @@ import { Bot, Plus, Telescope } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
+import { ShareItineraryDialog } from '@/components/share-itinerary-dialog';
 
 export default function Home() {
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
@@ -28,6 +29,7 @@ export default function Home() {
   const [isAiSheetOpen, setAiSheetOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [itineraryToShare, setItineraryToShare] = useState<Itinerary | null>(null);
   
   const { city: detectedCity, loading: locationLoading } = useLocation();
   const [currentCity, setCurrentCity] = useState<string | null>(null);
@@ -309,6 +311,7 @@ export default function Home() {
                         removeItinerary={removeItinerary}
                         removeActivity={removeActivity}
                         updateActivityTime={updateActivityTime}
+                        onShare={() => setItineraryToShare(itinerary)}
                         city={currentCity} 
                         onActivityClick={handleActivityClick} 
                       />
@@ -350,6 +353,15 @@ export default function Home() {
           }
         }}
         city={currentCity}
+      />
+      <ShareItineraryDialog 
+        itinerary={itineraryToShare}
+        open={!!itineraryToShare}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setItineraryToShare(null);
+          }
+        }}
       />
     </>
   );

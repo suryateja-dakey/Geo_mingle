@@ -7,7 +7,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { ActivityTimeline } from './activity-timeline';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import { Button } from './ui/button';
-import { Trash2, Clock, ArrowRight } from 'lucide-react';
+import { Trash2, Clock, ArrowRight, Share2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,11 +28,12 @@ interface ItineraryCardProps {
   removeItinerary: (id: string) => void;
   removeActivity: (activityId: string, itineraryId: string) => void;
   updateActivityTime: (activityId: string, itineraryId: string, newTime: string) => void;
+  onShare: (itinerary: Itinerary) => void;
   city: string | null;
   onActivityClick: (activity: Activity) => void;
 }
 
-export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, city, onActivityClick }: ItineraryCardProps) {
+export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, onShare, city, onActivityClick }: ItineraryCardProps) {
   const { setNodeRef } = useDroppable({ id: itinerary.id });
 
   const timeDetails = useMemo(() => calculateItineraryTimeDetails(itinerary.activities), [itinerary.activities]);
@@ -81,30 +82,36 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                   <CardDescription className='mt-1'>A set of AI-generated activities.</CardDescription>
               ) : null}
           </div>
-          {isAiSuggestion && (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon" className='ml-4'>
-                  <Trash2 className="h-5 w-5 text-destructive" />
-                  <span className="sr-only">Remove Itinerary</span>
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete this entire itinerary stack and all of its activities. This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => removeItinerary(itinerary.id)}>
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" onClick={() => onShare(itinerary)}>
+              <Share2 className="h-5 w-5" />
+              <span className="sr-only">Share Itinerary</span>
+            </Button>
+            {isAiSuggestion && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Trash2 className="h-5 w-5 text-destructive" />
+                    <span className="sr-only">Remove Itinerary</span>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete this entire itinerary stack and all of its activities. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => removeItinerary(itinerary.id)}>
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <ActivityTimeline
