@@ -33,8 +33,8 @@ export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
           <Compass className="h-8 w-8 text-primary" />
           <span className="text-2xl font-bold">Geo Mingle</span>
         </a>
-        <div className="mt-2 flex w-full items-center justify-center gap-4 md:mt-0 md:w-auto md:justify-end">
-          <div className="flex flex-1 items-center gap-2 rounded-md border bg-transparent px-2 text-sm text-muted-foreground md:flex-initial md:border-0 md:bg-inherit md:px-0">
+        <div className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border p-1 md:mt-0 md:w-auto md:justify-end">
+          <div className="flex flex-1 items-center gap-2 rounded-md bg-transparent px-2 text-sm text-muted-foreground md:flex-initial">
             <MapPin className="h-4 w-4" />
             <AutocompleteInput
               value={city}
