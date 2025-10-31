@@ -90,18 +90,18 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
   };
 
   const Badges = () => (
-    <>
-      {mealType && (
-        <Badge variant="outline" className={cn('capitalize', getMealBadgeColor())}>
-          {mealType}
-        </Badge>
-      )}
-      {activity.isCustom ? (
-        <Badge variant="outline">Custom</Badge>
-      ) : (
-        <Badge variant="secondary">AI</Badge>
-      )}
-    </>
+    <div className="flex items-center flex-wrap gap-2">
+        {mealType && (
+            <Badge variant="outline" className={cn('capitalize', getMealBadgeColor())}>
+            {mealType}
+            </Badge>
+        )}
+        {activity.isCustom ? (
+            <Badge variant="outline">Custom</Badge>
+        ) : (
+            <Badge variant="secondary">AI</Badge>
+        )}
+    </div>
   );
 
   return (
@@ -136,7 +136,22 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
           </div>
 
           <div className="flex-grow">
-            <p className="font-medium line-clamp-2 sm:pr-24">{activity.description}</p>
+            <div className="flex justify-between items-start">
+              <p className="font-medium line-clamp-2 pr-8">{activity.description}</p>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onRemove();
+                }}
+                >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Remove activity</span>
+              </Button>
+            </div>
+            
             {isEditingTime ? (
               <Input
                 ref={timeInputRef}
@@ -164,31 +179,9 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
                 {activity.location && (
                     <LocationLink location={activity.location} city={city} />
                 )}
-                {/* Badges for mobile */}
-                <div className="sm:hidden flex items-center flex-wrap gap-2">
-                    <Badges />
-                </div>
-            </div>
-
-          </div>
-          <div className="absolute top-4 right-4 flex items-center gap-2">
-            {/* Badges for desktop */}
-            <div className="hidden sm:flex items-center gap-2">
                 <Badges />
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove();
-              }}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Remove activity</span>
-            </Button>
           </div>
         </CardContent>
       </Card>
