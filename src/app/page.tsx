@@ -144,7 +144,7 @@ export default function Home() {
 
       const newItinerary: Itinerary = {
         id: itineraryId,
-        title: `AI Suggestion ${itineraries.filter(it => it.id.startsWith('ai-itinerary')).length + 1}`,
+        title: `AI Suggestions for ${currentCity}`,
         activities: newActivities,
       };
 
