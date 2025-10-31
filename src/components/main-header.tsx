@@ -30,8 +30,10 @@ export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-auto min-h-16 flex-col items-center justify-between gap-4 py-2 md:flex-row md:gap-0 md:py-0">
         <a href="/" className="flex items-center gap-3">
-          <Compass className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold">Geo Mingle</span>
+            <Compass className="h-8 w-8 text-primary" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-fuchsia-500 to-orange-400 bg-clip-text text-transparent">
+                Geo Mingle
+            </span>
         </a>
         <div className="flex w-full items-center justify-center gap-2 rounded-lg border p-1 md:w-auto md:justify-end">
           <div className="flex flex-1 items-center gap-2 rounded-md bg-transparent px-2 text-sm text-muted-foreground md:flex-initial">
