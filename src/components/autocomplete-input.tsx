@@ -54,6 +54,7 @@ export function AutocompleteInput({ value, onChange, loading, className }: Autoc
             {
               headers: {
                 'Accept': 'application/json',
+                'User-Agent': 'GeoMingle/1.0 (https://your-app-website.com)', // Added User-Agent
               },
             }
           );
