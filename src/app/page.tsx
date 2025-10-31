@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import type { Activity, Itinerary } from '@/lib/types';
 import { useLocation } from '@/hooks/use-location';
 import { generateInitialItinerary } from '@/ai/flows/generate-initial-itinerary';
@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Bot, Plus, Telescope } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
+import { Separator } from '@/components/ui/separator';
 
 export default function Home() {
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
@@ -206,7 +207,8 @@ export default function Home() {
     );
   }
 
-  const hasContent = itineraries.some(it => it.activities.length > 0);
+  const visibleItineraries = itineraries.filter(it => it.activities.length > 0);
+  const hasContent = visibleItineraries.length > 0;
 
   return (
     <>
@@ -222,17 +224,18 @@ export default function Home() {
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your today's plan</h1>
             {hasContent ? (
               <div className="space-y-8">
-                {itineraries.map(itinerary => (
-                  itinerary.activities.length > 0 && // Only render if there are activities
-                  <ItineraryCard 
-                    key={itinerary.id} 
-                    itinerary={itinerary} 
-                    setItineraries={setItineraries} 
-                    removeItinerary={removeItinerary}
-                    removeActivity={removeActivity}
-                    city={currentCity} 
-                    onActivityClick={handleActivityClick} 
-                  />
+                {visibleItineraries.map((itinerary, index) => (
+                  <Fragment key={itinerary.id}>
+                    <ItineraryCard 
+                      itinerary={itinerary} 
+                      setItineraries={setItineraries} 
+                      removeItinerary={removeItinerary}
+                      removeActivity={removeActivity}
+                      city={currentCity} 
+                      onActivityClick={handleActivityClick} 
+                    />
+                    {index < visibleItineraries.length - 1 && <Separator className="my-8" />}
+                  </Fragment>
                 ))}
               </div>
             ) : (
@@ -272,3 +275,5 @@ export default function Home() {
     </>
   );
 }
+
+    
