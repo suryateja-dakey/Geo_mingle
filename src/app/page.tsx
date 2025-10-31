@@ -358,7 +358,7 @@ function HomePageContent() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="icon" className="rounded-full shadow-lg h-14 w-14" onClick={() => setAddDialogOpen(true)}>
+              <Button size="icon" variant="secondary" className="rounded-full shadow-lg h-14 w-14" onClick={() => setAddDialogOpen(true)}>
                 <Plus className="h-7 w-7" />
                 <span className="sr-only">Add Event</span>
               </Button>
@@ -371,13 +371,13 @@ function HomePageContent() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button size="icon" variant="secondary" className="rounded-full shadow-lg h-14 w-14" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
+              <Button size="icon" className="rounded-full shadow-lg h-14 w-14 animate-pulse" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
                 <Bot className="h-7 w-7" />
-                <span className="sr-only">AI Suggestion</span>
+                <span className="sr-only">Suggest a plan</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>AI Suggestion</p>
+              <p>Suggest a plan</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -416,7 +416,5 @@ export default function Home() {
     </CityProvider>
   )
 }
-
-    
 
     
