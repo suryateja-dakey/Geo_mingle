@@ -3,14 +3,19 @@
 
 import React from 'react';
 import type { Itinerary } from '@/lib/types';
-import { Compass, MapPin, ImageIcon } from 'lucide-react';
+import { Compass, MapPin, ImageIcon, Clock, ArrowRight } from 'lucide-react';
 
 interface ItineraryShareImageProps {
   itinerary: Itinerary;
+  timeDetails: {
+    startTime: string | null;
+    endTime: string | null;
+    duration: string | null;
+  } | null;
 }
 
 export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItineraryShareImageProps>(
-  ({ itinerary }, ref) => {
+  ({ itinerary, timeDetails }, ref) => {
     return (
       <div
         ref={ref}
@@ -23,6 +28,23 @@ export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItinerarySha
         </div>
         
         <h2 className="text-xl font-bold tracking-tight mb-1">{itinerary.title}</h2>
+        
+        <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground mb-2">
+            {timeDetails?.startTime && timeDetails?.endTime && (
+                <div className='flex items-center gap-1.5'>
+                    <span>{timeDetails.startTime}</span>
+                    <ArrowRight className='h-3 w-3' />
+                    <span>{timeDetails.endTime}</span>
+                </div>
+            )}
+            {timeDetails?.duration && (
+                <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span>{timeDetails.duration} total</span>
+                </div>
+            )}
+        </div>
+
         {itinerary.prompt && (
           <p className="text-xs text-muted-foreground italic mb-4">"{itinerary.prompt}"</p>
         )}
@@ -37,14 +59,16 @@ export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItinerarySha
               </div>
 
               <div className="flex-grow pt-0.5">
-                {activity.location ? (
-                  <div className="flex items-start gap-1.5 font-medium text-xs leading-snug break-words whitespace-normal">
-                    <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
-                    <span>{activity.location}</span>
-                  </div>
-                ) : (
-                  <p className="font-medium text-xs leading-snug break-words whitespace-normal">{activity.description}</p>
-                )}
+                <div className="flex items-start gap-1.5 font-medium text-xs leading-snug break-words whitespace-normal">
+                  {activity.location ? (
+                    <>
+                      <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                      <span>{activity.location}</span>
+                    </>
+                  ) : (
+                    <span>{activity.description}</span>
+                  )}
+                </div>
               </div>
             </div>
           ))}

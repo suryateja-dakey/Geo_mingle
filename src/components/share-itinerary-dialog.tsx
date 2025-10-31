@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ItineraryShareImage } from '@/components/itinerary-share-image';
 import { Loader2, Download, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { calculateItineraryTimeDetails } from '@/lib/utils';
 
 interface ShareItineraryDialogProps {
   itinerary: Itinerary | null;
@@ -22,6 +23,8 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const timeDetails = itinerary ? calculateItineraryTimeDetails(itinerary.activities) : null;
+
   useEffect(() => {
     if (open && itinerary) {
       // Reset state when dialog opens
@@ -30,7 +33,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
       // Generate image after a short delay to allow fonts/images to render
       const timer = setTimeout(() => {
         generateImage();
-      }, 500); // Increased delay for images to load
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [open, itinerary]);
@@ -41,7 +44,6 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
       const dataUrl = await toPng(imageRef.current, { 
         cacheBust: true, 
         pixelRatio: 2,
-        // Ensure remote images are embedded
         fetchRequestInit: {
             mode: 'cors',
             credentials: 'omit'
@@ -126,7 +128,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
 
           {/* This is the hidden component used to generate the image. It's positioned off-screen. */}
           <div className="absolute -z-10 -left-[10000px] top-0">
-             {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} />}
+             {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} timeDetails={timeDetails} />}
           </div>
         </div>
 
