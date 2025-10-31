@@ -136,7 +136,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
           </div>
 
           <div className="flex-grow">
-            <p className="font-medium line-clamp-2 sm:pr-12">{activity.description}</p>
+            <p className="font-medium line-clamp-2 sm:pr-24">{activity.description}</p>
             {isEditingTime ? (
               <Input
                 ref={timeInputRef}
