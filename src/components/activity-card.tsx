@@ -10,7 +10,7 @@ import { GripVertical, X, MapPin, ImageIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 
-export function ActivityCard({ activity, onRemove, city, onClick }: { activity: Activity, onRemove: (id: string) => void, city: string | null, onClick: (activity: Activity) => void }) {
+export function ActivityCard({ activity, onRemove, city, onClick }: { activity: Activity, onRemove: () => void, city: string | null, onClick: (activity: Activity) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: activity.id });
 
   const style = {
@@ -79,7 +79,7 @@ export function ActivityCard({ activity, onRemove, city, onClick }: { activity: 
                 className="h-7 w-7 opacity-10 group-hover:opacity-100 transition-opacity"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onRemove(activity.id);
+                  onRemove();
                 }}
               >
                 <X className="h-4 w-4" />

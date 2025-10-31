@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { Activity } from '@/lib/types';
+import type { Activity, Itinerary } from '@/lib/types';
 import { useLocation } from '@/hooks/use-location';
 import { generateInitialItinerary } from '@/ai/flows/generate-initial-itinerary';
 import { getActivityPhoto } from '@/ai/flows/get-activity-photo';
 import { useToast } from '@/hooks/use-toast';
 
 import { MainHeader } from '@/components/main-header';
-import { ActivityTimeline } from '@/components/activity-timeline';
 import { AddActivityDialog } from '@/components/add-activity-dialog';
 import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
 import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
@@ -16,9 +15,10 @@ import { GeneratingLoader } from '@/components/generating-loader';
 import { Button } from '@/components/ui/button';
 import { Bot, Plus, Telescope } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ItineraryCard } from '@/components/itinerary-card';
 
 export default function Home() {
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [isMounted, setIsMounted] = useState(false);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const [isAiSheetOpen, setAiSheetOpen] = useState(false);
@@ -31,22 +31,25 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      const storedActivities = localStorage.getItem('geomingle-activities');
-      if (storedActivities) {
-        setActivities(JSON.parse(storedActivities));
+      const storedItineraries = localStorage.getItem('geomingle-itineraries');
+      if (storedItineraries) {
+        setItineraries(JSON.parse(storedItineraries));
+      } else {
+        // Initialize with a default itinerary if none exists
+        setItineraries([{ id: 'default-itinerary', title: "My Custom Events", activities: [] }]);
       }
     } catch (error) {
-      console.error("Failed to parse activities from localStorage", error);
-      setActivities([]);
+      console.error("Failed to parse itineraries from localStorage", error);
+      setItineraries([{ id: 'default-itinerary', title: "My Custom Events", activities: [] }]);
     }
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem('geomingle-activities', JSON.stringify(activities));
+      localStorage.setItem('geomingle-itineraries', JSON.stringify(itineraries));
     }
-  }, [activities, isMounted]);
+  }, [itineraries, isMounted]);
 
   useEffect(() => {
     if (detectedCity) {
@@ -54,21 +57,59 @@ export default function Home() {
     }
   }, [detectedCity]);
 
-  const addActivity = (activity: Omit<Activity, 'id' | 'isCustom'>) => {
-    setActivities(prev => [...prev, { ...activity, id: crypto.randomUUID(), isCustom: true }]);
+  const addActivity = (activity: Omit<Activity, 'id' | 'isCustom' | 'itineraryId'>) => {
+    const newActivity: Activity = { 
+      ...activity, 
+      id: crypto.randomUUID(), 
+      isCustom: true,
+      itineraryId: 'default-itinerary'
+    };
+
+    setItineraries(prev => {
+      const defaultItineraryExists = prev.some(it => it.id === 'default-itinerary');
+
+      if (defaultItineraryExists) {
+        return prev.map(it => 
+          it.id === 'default-itinerary' 
+            ? { ...it, activities: [...it.activities, newActivity] }
+            : it
+        );
+      } else {
+        // This case handles if the default itinerary was somehow deleted.
+        const newDefaultItinerary: Itinerary = {
+          id: 'default-itinerary',
+          title: "My Custom Events",
+          activities: [newActivity]
+        };
+        return [...prev, newDefaultItinerary];
+      }
+    });
+
     setAddDialogOpen(false);
   };
 
-  const removeActivity = (id: string) => {
-    setActivities(prev => prev.filter(activity => activity.id !== id));
+  const removeActivity = (activityId: string, itineraryId: string) => {
+    setItineraries(prev => prev.map(it => 
+      it.id === itineraryId 
+        ? { ...it, activities: it.activities.filter(act => act.id !== activityId) }
+        : it
+    ));
   };
+
+  const removeItinerary = (itineraryId: string) => {
+    setItineraries(prev => prev.filter(it => it.id !== itineraryId));
+  }
   
-  const fetchImageForActivity = async (activityId: string, query: string) => {
+  const fetchImageForActivity = async (activityId: string, itineraryId: string, query: string) => {
     try {
       const imageUrl = await getActivityPhoto({ query });
       if (imageUrl) {
-        setActivities(prev =>
-          prev.map(act => (act.id === activityId ? { ...act, imageUrl } : act))
+        setItineraries(prev =>
+          prev.map(itinerary => 
+            itinerary.id === itineraryId
+              ? { ...itinerary, activities: itinerary.activities.map(act => act.id === activityId ? { ...act, imageUrl } : act) }
+              : itinerary
+          )
         );
       }
     } catch (error) {
@@ -93,13 +134,21 @@ export default function Home() {
     try {
       const result = await generateInitialItinerary({ city: currentCity, prompt });
       
+      const itineraryId = `ai-itinerary-${crypto.randomUUID()}`;
       const newActivities: Activity[] = result.activities.map(activity => ({
         ...activity,
         id: crypto.randomUUID(),
         isCustom: false,
+        itineraryId,
       }));
 
-      setActivities(prev => [...prev, ...newActivities]);
+      const newItinerary: Itinerary = {
+        id: itineraryId,
+        title: `AI Suggestion ${itineraries.filter(it => it.id.startsWith('ai-itinerary')).length + 1}`,
+        activities: newActivities,
+      };
+
+      setItineraries(prev => [...prev, newItinerary]);
       
       toast({
         title: 'Itinerary generated!',
@@ -109,7 +158,7 @@ export default function Home() {
       // Progressively fetch images
       newActivities.forEach(activity => {
         if (activity.location && currentCity) {
-          fetchImageForActivity(activity.id, `${activity.location}, ${currentCity}`);
+          fetchImageForActivity(activity.id, itineraryId, `${activity.location}, ${currentCity}`);
         }
       });
 
@@ -130,7 +179,6 @@ export default function Home() {
       setSelectedActivity(activity);
     }
   };
-
 
   if (!isMounted) {
     return (
@@ -158,6 +206,8 @@ export default function Home() {
     );
   }
 
+  const hasContent = itineraries.some(it => it.activities.length > 0);
+
   return (
     <>
       {isGenerating && <GeneratingLoader />}
@@ -170,8 +220,21 @@ export default function Home() {
         <main className="flex-1">
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your today's plan</h1>
-            {activities.length > 0 ? (
-              <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={currentCity} onActivityClick={handleActivityClick} />
+            {hasContent ? (
+              <div className="space-y-8">
+                {itineraries.map(itinerary => (
+                  itinerary.activities.length > 0 && // Only render if there are activities
+                  <ItineraryCard 
+                    key={itinerary.id} 
+                    itinerary={itinerary} 
+                    setItineraries={setItineraries} 
+                    removeItinerary={removeItinerary}
+                    removeActivity={removeActivity}
+                    city={currentCity} 
+                    onActivityClick={handleActivityClick} 
+                  />
+                ))}
+              </div>
             ) : (
               <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
                 <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />

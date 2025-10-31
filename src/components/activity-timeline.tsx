@@ -7,13 +7,14 @@ import { ActivityCard } from './activity-card';
 
 interface ActivityTimelineProps {
   activities: Activity[];
-  setActivities: React.Dispatch<React.SetStateAction<Activity[]>>;
-  removeActivity: (id: string) => void;
+  itineraryId: string;
+  setActivities: (itineraryId: string, activities: Activity[]) => void;
+  removeActivity: (activityId: string, itineraryId: string) => void;
   city: string | null;
   onActivityClick: (activity: Activity) => void;
 }
 
-export function ActivityTimeline({ activities, setActivities, removeActivity, city, onActivityClick }: ActivityTimelineProps) {
+export function ActivityTimeline({ activities, itineraryId, setActivities, removeActivity, city, onActivityClick }: ActivityTimelineProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -25,11 +26,10 @@ export function ActivityTimeline({ activities, setActivities, removeActivity, ci
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      setActivities((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
+        const oldIndex = activities.findIndex((item) => item.id === active.id);
+        const newIndex = activities.findIndex((item) => item.id === over.id);
+        const newOrder = arrayMove(activities, oldIndex, newIndex);
+        setActivities(itineraryId, newOrder);
     }
   }
 
@@ -38,7 +38,7 @@ export function ActivityTimeline({ activities, setActivities, removeActivity, ci
       <SortableContext items={activities} strategy={verticalListSortingStrategy}>
         <div className="space-y-4">
           {activities.map(activity => (
-            <ActivityCard key={activity.id} activity={activity} onRemove={removeActivity} city={city} onClick={onActivityClick} />
+            <ActivityCard key={activity.id} activity={activity} onRemove={() => removeActivity(activity.id, itineraryId)} city={city} onClick={onActivityClick} />
           ))}
         </div>
       </SortableContext>
