@@ -17,7 +17,7 @@ import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
 import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
 import { GeneratingLoader } from '@/components/generating-loader';
 import { Button } from '@/components/ui/button';
-import { Bot, Plus, Telescope, Linkedin, Mail } from 'lucide-react';
+import { Bot, Plus, Telescope, Linkedin, Mail, Zap } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
@@ -256,6 +256,10 @@ function HomePageContent() {
     }
   };
 
+  const handleQuickPlan = () => {
+    handleGenerateItinerary("A balanced and interesting day with 3 to 5 activities.");
+  };
+
   const handleActivityClick = (activity: Activity) => {
     if (activity.imageUrl) {
       setSelectedActivity(activity);
@@ -327,6 +331,12 @@ function HomePageContent() {
                   <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
                     Plan your perfect day. Add events manually or use our AI to create a personalized itinerary. Click the magic wand to get started!
                   </p>
+                  <div className="mt-6">
+                    <Button onClick={handleQuickPlan} disabled={isGenerating}>
+                      <Zap className="mr-2 h-4 w-4" />
+                      Quick Plan
+                    </Button>
+                  </div>
                 </div>
               )}
             </DndContext>
@@ -341,7 +351,7 @@ function HomePageContent() {
                 <Linkedin className="h-4 w-4" />
                 LinkedIn
               </a>
-              <a href="https://wa.me/918328166464" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-primary transition-colors">
+              <a href="https://wa.me/918328166464" target-="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-primary transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 12c0 1.74.45 3.39 1.22 4.84l-1.13 4.14 4.24-1.11a9.78 9.78 0 0 0 4.67 1.13h.01c5.46 0 9.91-4.45 9.91-9.91s-4.45-9.91-9.91-9.91zM17.48 15.9c-.28.42-.99.79-1.37.84-.38.05-1.02.05-1.57-.17-.55-.22-1.32-.49-2.3-1.08-1.42-.87-2.37-1.99-2.61-2.92-.12-.47-.03-1.02.23-1.39.22-.3.47-.45.67-.45.2 0 .36.01.49.02.13.01.27.02.4.3.18.27.29.62.29.62s.11.3.01.55c-.1.25-.13.28-.26.41-.13.13-.23.23-.33.33-.08.08-.16.16-.06.26.09.11.45.69 1.13 1.33.91.85 1.57 1.16 2.12 1.31.11.03.3.06.41-.03.11-.09.41-.5.54-.67s.24-.26.41-.16c.17.1.55.26.55.26s.28.18.31.28c.03.1.04.28-.01.53z" /></svg>
                 WhatsApp
               </a>
@@ -416,7 +426,3 @@ export default function Home() {
     </CityProvider>
   )
 }
-
-    
-
-    

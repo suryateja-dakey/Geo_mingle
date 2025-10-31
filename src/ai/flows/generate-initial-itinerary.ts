@@ -13,7 +13,7 @@ import {z} from 'genkit';
 
 const GenerateInitialItineraryInputSchema = z.object({
   city: z.string().describe('The city for which to generate the itinerary.'),
-  prompt: z.string().describe('A description of the desired itinerary, including preferences and interests.'),
+  prompt: z.string().describe('A description of the desired itinerary, including preferences and interests. If the prompt mentions "3 to 5 activities", the output should contain between 3 and 5 activities.'),
 });
 export type GenerateInitialItineraryInput = z.infer<typeof GenerateInitialItineraryInputSchema>;
 
@@ -39,6 +39,8 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   output: {schema: GenerateInitialItineraryOutputSchema},
   model: googleAI.model('gemini-2.5-flash'),
   prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
+
+If the user prompt asks for "3 to 5 activities", you must generate an itinerary with a total of 3 to 5 activities.
 
 For each activity in the itinerary, provide the following structured information:
 1. 'time': The time for the activity.
