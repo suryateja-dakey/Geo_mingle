@@ -60,7 +60,20 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
   };
   
   const mealMatch = activity.description.match(/breakfast|lunch|dinner/i);
-  const mealType = mealMatch ? mealMatch[0] : null;
+  const mealType = mealMatch ? mealMatch[0].toLowerCase() : null;
+
+  const getMealBadgeColor = () => {
+    switch (mealType) {
+      case 'breakfast':
+        return 'bg-blue-600/20 text-blue-400 border-blue-500/30';
+      case 'lunch':
+        return 'bg-yellow-600/20 text-yellow-400 border-yellow-500/30';
+      case 'dinner':
+        return 'bg-purple-600/20 text-purple-400 border-purple-500/30';
+      default:
+        return '';
+    }
+  };
 
   const LocationLink = ({ location, city }: { location?: string, city: string | null }) => {
     if (!location || !city) return null;
@@ -108,10 +121,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
           </div>
 
           <div className="flex-grow">
-            <div className="flex items-center gap-2">
-              {mealType && <UtensilsCrossed className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
-              <p className="font-medium line-clamp-2">{activity.description}</p>
-            </div>
+            <p className="font-medium line-clamp-2 pr-12">{activity.description}</p>
             {isEditingTime ? (
               <Input
                 ref={timeInputRef}
@@ -138,26 +148,29 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
               <LocationLink location={activity.location} city={city} />
             )}
           </div>
-          <div className="flex flex-col items-end gap-2">
-             <div className="flex items-center gap-2">
-              {activity.isCustom ? (
-                <Badge variant="outline">Custom</Badge>
-              ) : (
-                <Badge variant="secondary">AI</Badge>
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemove();
-                }}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Remove activity</span>
-              </Button>
-            </div>
+          <div className="absolute top-4 right-4 flex items-center gap-2">
+            {mealType && (
+              <Badge variant="outline" className={cn('capitalize', getMealBadgeColor())}>
+                {mealType}
+              </Badge>
+            )}
+            {activity.isCustom ? (
+              <Badge variant="outline">Custom</Badge>
+            ) : (
+              <Badge variant="secondary">AI</Badge>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove();
+              }}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Remove activity</span>
+            </Button>
           </div>
         </CardContent>
       </Card>
