@@ -50,7 +50,12 @@ export function AutocompleteInput({ value, onChange, loading, className }: Autoc
       const fetchSuggestions = async () => {
         try {
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${debouncedSearchTerm}&featuretype=city&limit=5`
+            `https://nominatim.openstreetmap.org/search?format=json&q=${debouncedSearchTerm}&featuretype=city&limit=5`,
+            {
+              headers: {
+                'Accept': 'application/json',
+              },
+            }
           );
           if (!response.ok) {
             throw new Error('Failed to fetch suggestions');
