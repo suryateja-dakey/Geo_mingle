@@ -370,44 +370,48 @@ function HomePageContent() {
       
       <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button 
-                        size="icon" 
-                        variant="secondary" 
-                        className="rounded-full shadow-lg h-14 w-14" 
-                        onClick={() => setAddDialogOpen(true)}
-                    >
-                        <Plus className="h-7 w-7" />
-                        <span className="sr-only">Add Event</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Add Event</p>
-                </TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={() => setAiSheetOpen(true)}
+                disabled={isGenerating}
+                className={cn(
+                  'rounded-full shadow-lg h-14 animate-pulse',
+                  isMobile ? 'w-14' : 'px-6'
+                )}
+              >
+                <Bot className={cn('h-7 w-7', !isMobile && 'mr-2')} />
+                {!isMobile && 'Plan with AI'}
+                <span className="sr-only">Suggest a plan</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Suggest a plan</p>
+            </TooltipContent>
+          </Tooltip>
         </TooltipProvider>
 
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button 
-                        onClick={() => setAiSheetOpen(true)} 
-                        disabled={isGenerating}
-                        className={cn(
-                            "rounded-full shadow-lg h-14 animate-pulse",
-                            isMobile ? "w-14" : "px-6"
-                        )}
-                    >
-                        <Bot className={cn("h-7 w-7", !isMobile && "mr-2")} />
-                        {!isMobile && 'Plan with AI'}
-                        <span className="sr-only">Suggest a plan</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Suggest a plan</p>
-                </TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size={isMobile ? 'icon' : 'default'}
+                variant="secondary"
+                className={cn(
+                  'rounded-full shadow-lg h-14',
+                  isMobile ? 'w-14' : 'px-6'
+                )}
+                onClick={() => setAddDialogOpen(true)}
+              >
+                <Plus className={cn('h-7 w-7', !isMobile && 'mr-2')} />
+                {!isMobile && 'Add Event'}
+                <span className="sr-only">Add Event</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add Event</p>
+            </TooltipContent>
+          </Tooltip>
         </TooltipProvider>
       </div>
 
@@ -444,7 +448,3 @@ export default function Home() {
     </CityProvider>
   )
 }
-
-    
-
-    
