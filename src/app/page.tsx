@@ -4,6 +4,7 @@ import { useState, useEffect, Fragment } from 'react';
 import type { Activity, Itinerary } from '@/lib/types';
 import { useLocation } from '@/hooks/use-location';
 import { generateInitialItinerary } from '@/ai/flows/generate-initial-itinerary';
+import { getActivityPhoto } from '@/ai/flows/get-activity-photo';
 import { useToast } from '@/hooks/use-toast';
 
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
@@ -183,6 +184,27 @@ function HomePageContent() {
     }
   };
 
+  const fetchImageForActivity = async (itineraryId: string, activityId: string, query: string) => {
+    try {
+      const imageUrl = await getActivityPhoto({ query });
+      if (imageUrl) {
+        setItineraries(prev => prev.map(it => {
+          if (it.id === itineraryId) {
+            return {
+              ...it,
+              activities: it.activities.map(act => 
+                act.id === activityId ? { ...act, imageUrl } : act
+              )
+            };
+          }
+          return it;
+        }));
+      }
+    } catch (error) {
+      console.error(`Failed to fetch image for ${query}`, error);
+    }
+  };
+
   const handleGenerateItinerary = async (prompt: string) => {
     if (!currentCity || locationLoading) {
       toast({
@@ -219,6 +241,13 @@ function HomePageContent() {
       toast({
         title: 'Itinerary generated!',
         description: `Your new AI-powered itinerary is ready.`,
+      });
+
+      // Fetch images for the new activities
+      newActivities.forEach(activity => {
+        if (activity.imageHint) {
+          fetchImageForActivity(itineraryId, activity.id, `${activity.location}, ${currentCity}`);
+        }
       });
 
     } catch (error) {
