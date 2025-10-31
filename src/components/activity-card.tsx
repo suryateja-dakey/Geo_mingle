@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -78,18 +79,6 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
   return (
     <div ref={setNodeRef} style={style} className="relative group">
       <Card onClick={() => onClick(activity)} className="transition-all overflow-hidden hover:shadow-md hover:border-primary/50">
-        {mealType && (
-          <div 
-            className={cn(
-                "absolute top-2 -right-11 rotate-45 text-xs text-center text-white py-1 w-32 shadow-md",
-                mealType.toLowerCase() === 'breakfast' && 'bg-blue-500',
-                mealType.toLowerCase() === 'lunch' && 'bg-green-500',
-                mealType.toLowerCase() === 'dinner' && 'bg-purple-600'
-            )}
-          >
-            {mealType}
-          </div>
-        )}
         <CardContent className="flex items-start p-4 gap-4">
           <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
