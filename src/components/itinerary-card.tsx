@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { calculateItineraryTimeDetails } from '@/lib/utils';
 import { useMemo } from 'react';
+import { useCity } from '@/hooks/use-city';
 
 interface ItineraryCardProps {
   itinerary: Itinerary;
@@ -29,22 +30,14 @@ interface ItineraryCardProps {
   removeActivity: (activityId: string, itineraryId: string) => void;
   updateActivityTime: (activityId: string, itineraryId: string, newTime: string) => void;
   onShare: (itinerary: Itinerary) => void;
-  city: string | null;
   onActivityClick: (activity: Activity) => void;
 }
 
-export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, onShare, city, onActivityClick }: ItineraryCardProps) {
+export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, onShare, onActivityClick }: ItineraryCardProps) {
   const { setNodeRef } = useDroppable({ id: itinerary.id });
+  const { city } = useCity();
 
   const timeDetails = useMemo(() => calculateItineraryTimeDetails(itinerary.activities), [itinerary.activities]);
-
-  const handleSetActivities = (itineraryId: string, newActivities: Activity[]) => {
-    setItineraries(prev =>
-      prev.map(it =>
-        it.id === itineraryId ? { ...it, activities: newActivities } : it
-      )
-    );
-  };
 
   const isAiSuggestion = itinerary.id.startsWith('ai-itinerary');
 

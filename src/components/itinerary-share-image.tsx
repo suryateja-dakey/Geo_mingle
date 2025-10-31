@@ -7,6 +7,7 @@ import { Compass, MapPin, ImageIcon, Clock, ArrowRight } from 'lucide-react';
 
 interface ItineraryShareImageProps {
   itinerary: Itinerary;
+  city: string | null;
   timeDetails: {
     startTime: string | null;
     endTime: string | null;
@@ -15,7 +16,10 @@ interface ItineraryShareImageProps {
 }
 
 export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItineraryShareImageProps>(
-  ({ itinerary, timeDetails }, ref) => {
+  ({ itinerary, city, timeDetails }, ref) => {
+
+    const shareTitle = city ? `Your one day Trip in ${city}` : itinerary.title;
+
     return (
       <div
         ref={ref}
@@ -27,7 +31,7 @@ export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItinerarySha
           <span className="text-xl font-bold">Geo Mingle</span>
         </div>
         
-        <h2 className="text-xl font-bold tracking-tight mb-1">{itinerary.title}</h2>
+        <h2 className="text-xl font-bold tracking-tight mb-1">{shareTitle}</h2>
         
         <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground mb-2">
             {timeDetails?.startTime && timeDetails?.endTime && (

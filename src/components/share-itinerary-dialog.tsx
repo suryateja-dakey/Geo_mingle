@@ -10,6 +10,7 @@ import { ItineraryShareImage } from '@/components/itinerary-share-image';
 import { Loader2, Download, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { calculateItineraryTimeDetails } from '@/lib/utils';
+import { useCity } from '@/hooks/use-city';
 
 interface ShareItineraryDialogProps {
   itinerary: Itinerary | null;
@@ -22,6 +23,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
   const [isGenerating, setIsGenerating] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const { toast } = useToast();
+  const { city } = useCity();
 
   const timeDetails = itinerary ? calculateItineraryTimeDetails(itinerary.activities) : null;
 
@@ -128,7 +130,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
 
           {/* This is the hidden component used to generate the image. It's positioned off-screen. */}
           <div className="absolute -z-10 -left-[10000px] top-0">
-             {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} timeDetails={timeDetails} />}
+             {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} city={city} timeDetails={timeDetails} />}
           </div>
         </div>
 

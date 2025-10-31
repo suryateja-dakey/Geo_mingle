@@ -21,8 +21,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
 import { ShareItineraryDialog } from '@/components/share-itinerary-dialog';
+import { CityProvider } from '@/hooks/use-city-provider';
 
-export default function Home() {
+function HomePageContent() {
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [isMounted, setIsMounted] = useState(false);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
@@ -285,7 +286,6 @@ export default function Home() {
     );
   }
 
-  const visibleItineraries = itineraries.filter(it => it.activities.length > 0);
   const hasContent = itineraries.some(it => it.activities.length > 0);
 
   return (
@@ -312,7 +312,6 @@ export default function Home() {
                         removeActivity={removeActivity}
                         updateActivityTime={updateActivityTime}
                         onShare={() => setItineraryToShare(itinerary)}
-                        city={currentCity} 
                         onActivityClick={handleActivityClick} 
                       />
                       {index < itineraries.length - 1 && itineraries[index + 1]?.activities.length > 0 && itinerary.activities.length > 0 && <Separator className="my-8" />}
@@ -365,4 +364,13 @@ export default function Home() {
       />
     </>
   );
+}
+
+
+export default function Home() {
+  return (
+    <CityProvider>
+      <HomePageContent />
+    </CityProvider>
+  )
 }

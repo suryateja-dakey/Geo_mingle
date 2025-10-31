@@ -4,6 +4,8 @@ import { Compass, MapPin, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 import { AutocompleteInput } from './autocomplete-input';
+import { useCity } from '@/hooks/use-city';
+import { useEffect } from 'react';
 
 interface MainHeaderProps {
     city: string | null;
@@ -12,7 +14,16 @@ interface MainHeaderProps {
 }
 
 export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
+  const { setCity: setGlobalCity } = useCity();
+
+  // Keep global city state in sync with local state
+  useEffect(() => {
+    setGlobalCity(city);
+  }, [city, setGlobalCity]);
+
+  // Use a local state for theme to avoid re-rendering the whole context
+  const { theme } = useTheme();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
