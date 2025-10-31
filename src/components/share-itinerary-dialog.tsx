@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
@@ -29,7 +30,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
       // Generate image after a short delay to allow fonts/images to render
       const timer = setTimeout(() => {
         generateImage();
-      }, 300);
+      }, 500); // Increased delay for images to load
       return () => clearTimeout(timer);
     }
   }, [open, itinerary]);
@@ -37,14 +38,22 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
   const generateImage = async () => {
     if (!imageRef.current) return;
     try {
-      const dataUrl = await toPng(imageRef.current, { cacheBust: true, pixelRatio: 2 });
+      const dataUrl = await toPng(imageRef.current, { 
+        cacheBust: true, 
+        pixelRatio: 2,
+        // Ensure remote images are embedded
+        fetchRequestInit: {
+            mode: 'cors',
+            credentials: 'omit'
+        }
+      });
       setImageDataUrl(dataUrl);
     } catch (err) {
       console.error(err);
       toast({
         variant: "destructive",
         title: "Image Generation Failed",
-        description: "Could not create an image of the itinerary.",
+        description: "Could not create an image of the itinerary. Some images might not be accessible.",
       });
     } finally {
       setIsGenerating(false);
@@ -94,7 +103,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Share Your Itinerary</DialogTitle>
           <DialogDescription>
@@ -102,7 +111,7 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
           </DialogDescription>
         </DialogHeader>
         
-        <div className="relative my-4 flex items-center justify-center bg-muted/40 p-4 rounded-lg min-h-[300px]">
+        <div className="relative my-4 flex items-center justify-center bg-muted/40 p-4 rounded-lg min-h-[400px]">
           {isGenerating && !imageDataUrl && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -111,11 +120,12 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
           )}
           
           {imageDataUrl && (
-            <img src={imageDataUrl} alt="Itinerary Preview" className="max-w-full h-auto rounded-md shadow-lg" />
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={imageDataUrl} alt="Itinerary Preview" className="max-w-full h-auto max-h-[50vh] rounded-md shadow-lg" />
           )}
 
           {/* This is the hidden component used to generate the image. It's positioned off-screen. */}
-          <div className="absolute -z-10 -left-[10000px]">
+          <div className="absolute -z-10 -left-[10000px] top-0">
              {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} />}
           </div>
         </div>
