@@ -40,17 +40,19 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
 
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div className='flex-1'>
             <CardTitle>{itinerary.title}</CardTitle>
-            {isAiSuggestion && (
+            {itinerary.prompt ? (
+                <CardDescription className="italic mt-1">"{itinerary.prompt}"</CardDescription>
+            ) : isAiSuggestion && (
                 <CardDescription>A set of AI-generated activities.</CardDescription>
             )}
         </div>
         {isAiSuggestion && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className='ml-4'>
                 <Trash2 className="h-5 w-5 text-destructive" />
                 <span className="sr-only">Remove Itinerary</span>
               </Button>

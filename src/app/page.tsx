@@ -147,6 +147,7 @@ export default function Home() {
         id: itineraryId,
         title: `AI Suggestions for ${currentCity}`,
         activities: newActivities,
+        prompt: prompt,
       };
 
       setItineraries(prev => [...prev, newItinerary]);

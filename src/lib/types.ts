@@ -13,4 +13,5 @@ export type Itinerary = {
   id: string;
   title: string;
   activities: Activity[];
+  prompt?: string;
 };
