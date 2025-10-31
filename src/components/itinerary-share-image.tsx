@@ -3,7 +3,9 @@
 
 import React from 'react';
 import type { Itinerary } from '@/lib/types';
-import { Compass, MapPin, ImageIcon, Clock, ArrowRight } from 'lucide-react';
+import { Compass, MapPin, Clock, ArrowRight, UtensilsCrossed } from 'lucide-react';
+import { Badge } from './ui/badge';
+import { cn } from '@/lib/utils';
 
 interface ItineraryShareImageProps {
   itinerary: Itinerary;
@@ -19,6 +21,19 @@ export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItinerarySha
   ({ itinerary, city, timeDetails }, ref) => {
 
     const shareTitle = city ? `Your one day Trip in ${city}` : itinerary.title;
+
+    const getMealBadgeColor = (mealType: string) => {
+        switch (mealType) {
+        case 'breakfast':
+            return 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300';
+        case 'lunch':
+            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300';
+        case 'dinner':
+            return 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300';
+        default:
+            return '';
+        }
+    };
 
     return (
       <div
@@ -54,28 +69,49 @@ export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItinerarySha
         )}
 
         <div className="space-y-3 overflow-y-auto flex-grow">
-          {itinerary.activities.map((activity) => (
-            <div key={activity.id} className="flex items-start gap-3 text-sm">
-              <div className="w-16 text-right text-muted-foreground flex-shrink-0 text-xs pt-0.5">{activity.time}</div>
-              
-              <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-muted flex items-center justify-center">
-                 <ImageIcon className="w-6 h-6 text-muted-foreground" />
-              </div>
+          {itinerary.activities.map((activity) => {
+            const mealMatch = activity.description.match(/breakfast|lunch|dinner/i);
+            const mealType = mealMatch ? mealMatch[0].toLowerCase() : null;
 
-              <div className="flex-grow pt-0.5">
-                <div className="font-medium text-xs leading-snug break-words whitespace-normal">
-                  {activity.location ? (
-                    <div className="flex items-start gap-1.5">
-                        <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
-                        <span>{activity.location}</span>
+            return (
+                <div key={activity.id} className="flex items-start gap-3 text-sm">
+                    <div className="w-16 text-right text-muted-foreground flex-shrink-0 text-xs pt-0.5">{activity.time}</div>
+                    
+                    <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-muted flex items-center justify-center">
+                        {mealType ? (
+                            <UtensilsCrossed className="w-6 h-6 text-muted-foreground" />
+                        ) : (
+                            <MapPin className="w-6 h-6 text-muted-foreground" />
+                        )}
                     </div>
-                  ) : (
-                    <span>{activity.description}</span>
-                  )}
+
+                    <div className="flex-grow pt-0.5">
+                        <div className="font-medium text-xs leading-snug break-words whitespace-normal mb-1.5">
+                            {activity.location ? (
+                                <div className="flex items-start gap-1.5">
+                                    <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                                    <span>{activity.location}</span>
+                                </div>
+                            ) : (
+                                <span>{activity.description}</span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            {mealType && (
+                                <Badge variant="outline" className={cn('capitalize text-xs p-1 h-auto', getMealBadgeColor(mealType))}>
+                                    {mealType}
+                                </Badge>
+                            )}
+                            {activity.isCustom ? (
+                                <Badge variant="outline" className="text-xs p-1 h-auto">Custom</Badge>
+                            ) : (
+                                <Badge variant="secondary" className="text-xs p-1 h-auto">AI</Badge>
+                            )}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         <p className="text-xs text-center text-muted-foreground mt-6 flex-shrink-0">
