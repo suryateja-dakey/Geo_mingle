@@ -333,9 +333,9 @@ function HomePageContent() {
         </main>
 
         <footer className="py-6 mt-auto bg-background/50">
-          <div className="container flex flex-col items-end justify-center text-sm text-muted-foreground">
+          <div className="container flex flex-col items-center justify-center text-sm text-muted-foreground">
             <p>Developed by Suryateja Dakey &copy; {new Date().getFullYear()}</p>
-            <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 mt-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-2">
               <a href="https://www.linkedin.com/in/suryateja-dakey/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-primary transition-colors">
                 <Linkedin className="h-4 w-4" />
                 LinkedIn
