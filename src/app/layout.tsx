@@ -18,7 +18,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+        {/* The href for fonts.googleapis.com is removed to prevent a cross-origin error in html-to-image */}
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        `}</style>
       </head>
       <body className="font-body antialiased min-h-screen">
         <ThemeProvider
