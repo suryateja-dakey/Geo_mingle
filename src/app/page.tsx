@@ -325,7 +325,7 @@ function HomePageContent() {
                   <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="mt-4 text-lg font-semibold">Welcome to Geo Mingle!</h3>
                   <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
-                    This is your AI-powered travel itinerary planner. Get started by adding a custom event, or let our AI create a personalized itinerary for you. Just describe your ideal day and we&apos;ll handle the rest!
+                    Plan your perfect day. Add events manually or use our AI to create a personalized itinerary. Click the magic wand to get started!
                   </p>
                 </div>
               )}
@@ -416,5 +416,7 @@ export default function Home() {
     </CityProvider>
   )
 }
+
+    
 
     
