@@ -24,25 +24,31 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
   };
 
   useEffect(() => {
+    setTimeValue(activity.time);
+  }, [activity.time]);
+
+  useEffect(() => {
     if (isEditingTime && timeInputRef.current) {
       timeInputRef.current.focus();
+      timeInputRef.current.select();
     }
   }, [isEditingTime]);
 
-  const handleTimeBlur = () => {
-    setIsEditingTime(false);
-    // Basic validation, you could improve this
+  const handleTimeSave = () => {
     if (timeValue.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)) {
-      onTimeChange(timeValue);
+      if (timeValue !== activity.time) {
+        onTimeChange(timeValue);
+      }
     } else {
       // Revert if format is incorrect
       setTimeValue(activity.time);
     }
+    setIsEditingTime(false);
   };
 
   const handleTimeKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleTimeBlur();
+      handleTimeSave();
     } else if (e.key === 'Escape') {
       setIsEditingTime(false);
       setTimeValue(activity.time);
@@ -98,7 +104,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
                 type="text"
                 value={timeValue}
                 onChange={(e) => setTimeValue(e.target.value)}
-                onBlur={handleTimeBlur}
+                onBlur={handleTimeSave}
                 onKeyDown={handleTimeKeyDown}
                 className="h-7 mt-1 text-sm text-muted-foreground w-24"
                 onClick={(e) => e.stopPropagation()}
