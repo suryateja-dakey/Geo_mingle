@@ -12,6 +12,7 @@ import { ActivityTimeline } from '@/components/activity-timeline';
 import { AddActivityDialog } from '@/components/add-activity-dialog';
 import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
 import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
+import { GeneratingLoader } from '@/components/generating-loader';
 import { Button } from '@/components/ui/button';
 import { Bot, Plus, Telescope } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,6 +23,7 @@ export default function Home() {
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const [isAiSheetOpen, setAiSheetOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const { city: detectedCity, loading: locationLoading } = useLocation();
   const [currentCity, setCurrentCity] = useState<string | null>(null);
@@ -86,6 +88,7 @@ export default function Home() {
     }
 
     setAiSheetOpen(false);
+    setIsGenerating(true);
 
     try {
       const result = await generateInitialItinerary({ city: currentCity, prompt });
@@ -117,6 +120,8 @@ export default function Home() {
         title: 'Generation Failed',
         description: 'Could not generate itinerary. Please try again.',
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -155,6 +160,7 @@ export default function Home() {
 
   return (
     <>
+      {isGenerating && <GeneratingLoader />}
       <div className="flex flex-col min-h-screen">
         <MainHeader 
           city={currentCity}
@@ -183,13 +189,13 @@ export default function Home() {
         <Button size="lg" className="rounded-full shadow-lg" onClick={() => setAddDialogOpen(true)}>
           <Plus className="mr-2 h-5 w-5" /> Add Event
         </Button>
-        <Button size="lg" variant="secondary" className="rounded-full shadow-lg" onClick={() => setAiSheetOpen(true)}>
+        <Button size="lg" variant="secondary" className="rounded-full shadow-lg" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
             <Bot className="mr-2 h-5 w-5" /> AI Suggestion
         </Button>
       </div>
 
       <AddActivityDialog open={isAddDialogOpen} onOpenChange={setAddDialogOpen} onAddActivity={addActivity} />
-      <AiSuggestionSheet open={isAiSheetOpen} onOpenChange={setAiSheetOpen} onGenerate={handleGenerateItinerary} />
+      <AiSuggestionSheet open={isAiSheetOpen} onOpenChange={setAiSheetOpen} onGenerate={handleGenerateItinerary} isGenerating={isGenerating} />
       <ActivityDetailDialog 
         activity={selectedActivity} 
         open={!!selectedActivity} 

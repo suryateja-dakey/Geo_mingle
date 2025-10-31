@@ -18,16 +18,14 @@ interface AiSuggestionSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onGenerate: (prompt: string) => Promise<void>;
+  isGenerating: boolean;
 }
 
-export function AiSuggestionSheet({ open, onOpenChange, onGenerate }: AiSuggestionSheetProps) {
+export function AiSuggestionSheet({ open, onOpenChange, onGenerate, isGenerating }: AiSuggestionSheetProps) {
   const [prompt, setPrompt] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     await onGenerate(prompt);
-    setIsLoading(false);
   };
   
   const examplePrompts = [
@@ -59,22 +57,23 @@ export function AiSuggestionSheet({ open, onOpenChange, onGenerate }: AiSuggesti
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     className="min-h-[120px]"
+                    disabled={isGenerating}
                 />
             </div>
             <div className="space-y-2">
                 <Label>Or try an example:</Label>
                 <div className="flex flex-wrap gap-2">
                     {examplePrompts.map(p => (
-                        <Button key={p} variant="outline" size="sm" onClick={() => handleExampleClick(p)}>{p}</Button>
+                        <Button key={p} variant="outline" size="sm" onClick={() => handleExampleClick(p)} disabled={isGenerating}>{p}</Button>
                     ))}
                 </div>
             </div>
         </div>
         <SheetFooter>
-          <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleSubmit} disabled={!prompt || isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isLoading ? 'Generating...' : 'Generate Itinerary'}
+          <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={isGenerating}>Cancel</Button>
+          <Button onClick={handleSubmit} disabled={!prompt || isGenerating}>
+            {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isGenerating ? 'Generating...' : 'Generate Itinerary'}
           </Button>
         </SheetFooter>
       </SheetContent>
