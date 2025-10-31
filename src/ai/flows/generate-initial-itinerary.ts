@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/google-genai';
 import {z} from 'genkit';
 
 const GenerateInitialItineraryInputSchema = z.object({
@@ -36,6 +37,7 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   name: 'generateInitialItineraryPrompt',
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
+  model: googleAI.model('gemini-2.5-flash'),
   prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
 
 For each activity in the itinerary, provide the following structured information:
