@@ -44,7 +44,7 @@ export function AiSuggestionSheet({ open, onOpenChange, onGenerate, isGenerating
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>Generate AI Itinerary</SheetTitle>
+          <SheetTitle>Generate Today's Plan</SheetTitle>
           <SheetDescription>
             Describe the kind of day you'd like, and our AI will create a personalized plan for you.
           </SheetDescription>

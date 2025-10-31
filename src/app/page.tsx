@@ -301,7 +301,7 @@ function HomePageContent() {
         />
         <main className="flex-1">
           <div className="container mx-auto px-4 py-8 max-w-4xl">
-            <h1 className="text-3xl font-bold tracking-tight mb-8">Your today's plan</h1>
+            <h1 className="text-3xl font-bold tracking-tight mb-8">Today's Plan</h1>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               {hasContent ? (
                 <div className="space-y-8">
