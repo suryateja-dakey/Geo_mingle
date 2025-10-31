@@ -20,7 +20,7 @@ export type GenerateInitialItineraryInput = z.infer<typeof GenerateInitialItiner
 const ActivitySchema = z.object({
   time: z.string().describe('The time of the activity in a friendly format (e.g., "9:00 AM", "1:30 PM").'),
   description: z.string().describe('A description of the activity.'),
-  location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Louvre Museum"). This should be just the name of the place, not the full address.'),
+  location: z.string().optional().describe('The specific name of the main location or venue for this activity (e.g., "Eiffel Tower", "Paradise Biryani"). This should be just the name of the place, not the full address.'),
   imageHint: z.string().optional().describe('One or two keywords describing the location for an image search (e.g., "Eiffel Tower"). This should be based on the location field.'),
 });
 
@@ -44,11 +44,13 @@ For each activity in the itinerary, provide the following structured information
 1. 'time': The time for the activity.
 2. 'description': A clear description of what the activity is.
 
-If and only if there is a specific, named location for an activity (e.g., "Eiffel Tower", "Central Park", "Louvre Museum"), you must also provide:
-3. 'location': The specific, concise name of the place, monument, or venue ONLY. This field must contain ONLY the name. Do NOT add any other descriptive text, commentary, or conversational content in this field. For example, it must be "Louvre Museum", not "The world-famous Louvre Museum".
-4. 'imageHint': One or two keywords that describe the location, which can be used for an image search later. This hint must directly relate to the 'location' field.
+If an activity has a specific, named location (e.g., "Eiffel Tower", "Central Park"), you must provide:
+3. 'location': The specific, concise name of the place.
+4. 'imageHint': One or two keywords for an image search related to the 'location'.
 
-If an activity does not have a specific location (like "lunch at a local restaurant"), you MUST OMIT the 'location' and 'imageHint' fields for that activity.`,
+If the activity is a meal like lunch or dinner, you MUST suggest a specific, well-known restaurant in that city and use its name for the 'location'. For example, if suggesting biryani in Hyderabad, you might set the location to "Paradise Biryani".
+
+If an activity does not have a specific location (e.g., "take a walk"), you MUST OMIT the 'location' and 'imageHint' fields. Do NOT invent locations.`,
 });
 
 const generateInitialItineraryFlow = ai.defineFlow(
