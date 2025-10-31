@@ -7,7 +7,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { ActivityTimeline } from './activity-timeline';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import { Button } from './ui/button';
-import { Trash2, Clock } from 'lucide-react';
+import { Trash2, Clock, ArrowRight } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { calculateItineraryDuration } from '@/lib/utils';
+import { calculateItineraryTimeDetails } from '@/lib/utils';
 import { useMemo } from 'react';
 
 interface ItineraryCardProps {
@@ -35,7 +35,7 @@ interface ItineraryCardProps {
 export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, city, onActivityClick }: ItineraryCardProps) {
   const { setNodeRef } = useDroppable({ id: itinerary.id });
 
-  const duration = useMemo(() => calculateItineraryDuration(itinerary.activities), [itinerary.activities]);
+  const timeDetails = useMemo(() => calculateItineraryTimeDetails(itinerary.activities), [itinerary.activities]);
 
   const handleSetActivities = (itineraryId: string, newActivities: Activity[]) => {
     setItineraries(prev =>
@@ -57,19 +57,28 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
       <Card className="w-full" ref={setNodeRef}>
         <CardHeader className="flex flex-row items-start justify-between">
           <div className='flex-1'>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <CardTitle>{itinerary.title}</CardTitle>
-                {duration && (
-                  <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    <span>{duration} total</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
+                  {timeDetails.startTime && timeDetails.endTime && (
+                    <div className='flex items-center gap-2'>
+                      <span>{timeDetails.startTime}</span>
+                      <ArrowRight className='h-4 w-4' />
+                      <span>{timeDetails.endTime}</span>
+                    </div>
+                  )}
+                  {timeDetails.duration && (
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-4 w-4" />
+                      <span>{timeDetails.duration} total</span>
+                    </div>
+                  )}
+                </div>
               </div>
               {itinerary.prompt ? (
-                  <CardDescription className="italic mt-1">"{itinerary.prompt}"</CardDescription>
+                  <CardDescription className="italic mt-2">"{itinerary.prompt}"</CardDescription>
               ) : isAiSuggestion ? (
-                  <CardDescription>A set of AI-generated activities.</CardDescription>
+                  <CardDescription className='mt-1'>A set of AI-generated activities.</CardDescription>
               ) : null}
           </div>
           {isAiSuggestion && (
