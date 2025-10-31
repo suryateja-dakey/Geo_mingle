@@ -52,11 +52,11 @@ function HomePageContent() {
         setItineraries(JSON.parse(storedItineraries));
       } else {
         // Initialize with a default itinerary if none exists
-        setItineraries([{ id: 'default-itinerary', title: "My Custom Events", activities: [] }]);
+        setItineraries([{ id: 'default-itinerary', title: "My Custom Plan", activities: [] }]);
       }
     } catch (error) {
       console.error("Failed to parse itineraries from localStorage", error);
-      setItineraries([{ id: 'default-itinerary', title: "My Custom Events", activities: [] }]);
+      setItineraries([{ id: 'default-itinerary', title: "My Custom Plan", activities: [] }]);
     }
     setIsMounted(true);
   }, []);
@@ -94,7 +94,7 @@ function HomePageContent() {
         // This case handles if the default itinerary was somehow deleted.
         const newDefaultItinerary: Itinerary = {
           id: 'default-itinerary',
-          title: "My Custom Events",
+          title: "My Custom Plan",
           activities: [newActivity]
         };
         return [...prev, newDefaultItinerary];
@@ -225,7 +225,7 @@ function HomePageContent() {
 
       const newItinerary: Itinerary = {
         id: itineraryId,
-        title: `AI Suggestions for ${currentCity}`,
+        title: `Your One Day Plan in ${currentCity}`,
         activities: newActivities,
         prompt: prompt,
       };
@@ -426,3 +426,5 @@ export default function Home() {
     </CityProvider>
   )
 }
+
+    
