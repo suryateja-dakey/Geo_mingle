@@ -7,11 +7,12 @@ interface ActivityTimelineProps {
   activities: Activity[];
   itineraryId: string;
   removeActivity: (activityId: string, itineraryId: string) => void;
+  updateActivityTime: (activityId: string, itineraryId: string, newTime: string) => void;
   city: string | null;
   onActivityClick: (activity: Activity) => void;
 }
 
-export function ActivityTimeline({ activities, itineraryId, removeActivity, city, onActivityClick }: ActivityTimelineProps) {
+export function ActivityTimeline({ activities, itineraryId, removeActivity, updateActivityTime, city, onActivityClick }: ActivityTimelineProps) {
   if (activities.length === 0) {
     return (
         <div className="text-center py-8 px-4 border-2 border-dashed rounded-lg">
@@ -25,7 +26,14 @@ export function ActivityTimeline({ activities, itineraryId, removeActivity, city
   return (
     <div className="space-y-4">
       {activities.map(activity => (
-        <ActivityCard key={activity.id} activity={activity} onRemove={() => removeActivity(activity.id, itineraryId)} city={city} onClick={onActivityClick} />
+        <ActivityCard 
+            key={activity.id} 
+            activity={activity} 
+            onRemove={() => removeActivity(activity.id, itineraryId)} 
+            onTimeChange={(newTime) => updateActivityTime(activity.id, itineraryId, newTime)}
+            city={city} 
+            onClick={onActivityClick} 
+        />
       ))}
     </div>
   );

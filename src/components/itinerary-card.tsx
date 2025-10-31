@@ -25,11 +25,12 @@ interface ItineraryCardProps {
   setItineraries: React.Dispatch<React.SetStateAction<Itinerary[]>>;
   removeItinerary: (id: string) => void;
   removeActivity: (activityId: string, itineraryId: string) => void;
+  updateActivityTime: (activityId: string, itineraryId: string, newTime: string) => void;
   city: string | null;
   onActivityClick: (activity: Activity) => void;
 }
 
-export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, city, onActivityClick }: ItineraryCardProps) {
+export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, city, onActivityClick }: ItineraryCardProps) {
   const { setNodeRef } = useDroppable({ id: itinerary.id });
 
   const handleSetActivities = (itineraryId: string, newActivities: Activity[]) => {
@@ -89,6 +90,7 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
             activities={itinerary.activities}
             itineraryId={itinerary.id}
             removeActivity={removeActivity}
+            updateActivityTime={updateActivityTime}
             city={city}
             onActivityClick={onActivityClick}
           />

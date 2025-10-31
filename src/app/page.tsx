@@ -106,6 +106,21 @@ export default function Home() {
         : it
     ));
   };
+  
+  const updateActivityTime = (activityId: string, itineraryId: string, newTime: string) => {
+    setItineraries(prev =>
+      prev.map(itinerary =>
+        itinerary.id === itineraryId
+          ? {
+              ...itinerary,
+              activities: itinerary.activities.map(act =>
+                act.id === activityId ? { ...act, time: newTime } : act
+              ),
+            }
+          : itinerary
+      )
+    );
+  };
 
   const removeItinerary = (itineraryId: string) => {
     setItineraries(prev => prev.filter(it => it.id !== itineraryId));
@@ -293,6 +308,7 @@ export default function Home() {
                         setItineraries={setItineraries} 
                         removeItinerary={removeItinerary}
                         removeActivity={removeActivity}
+                        updateActivityTime={updateActivityTime}
                         city={currentCity} 
                         onActivityClick={handleActivityClick} 
                       />

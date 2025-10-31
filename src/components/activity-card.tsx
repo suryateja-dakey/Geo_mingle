@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import type { Activity } from '@/lib/types';
 import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
@@ -9,13 +10,43 @@ import { Badge } from '@/components/ui/badge';
 import { GripVertical, X, MapPin, ImageIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
+import { Input } from './ui/input';
 
-export function ActivityCard({ activity, onRemove, city, onClick }: { activity: Activity, onRemove: () => void, city: string | null, onClick: (activity: Activity) => void }) {
+export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }: { activity: Activity, onRemove: () => void, onTimeChange: (newTime: string) => void, city: string | null, onClick: (activity: Activity) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: activity.id });
+  const [isEditingTime, setIsEditingTime] = useState(false);
+  const [timeValue, setTimeValue] = useState(activity.time);
+  const timeInputRef = useRef<HTMLInputElement>(null);
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  useEffect(() => {
+    if (isEditingTime && timeInputRef.current) {
+      timeInputRef.current.focus();
+    }
+  }, [isEditingTime]);
+
+  const handleTimeBlur = () => {
+    setIsEditingTime(false);
+    // Basic validation, you could improve this
+    if (timeValue.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)) {
+      onTimeChange(timeValue);
+    } else {
+      // Revert if format is incorrect
+      setTimeValue(activity.time);
+    }
+  };
+
+  const handleTimeKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleTimeBlur();
+    } else if (e.key === 'Escape') {
+      setIsEditingTime(false);
+      setTimeValue(activity.time);
+    }
   };
 
   const LocationLink = ({ location, city }: { location?: string, city: string | null }) => {
@@ -61,7 +92,28 @@ export function ActivityCard({ activity, onRemove, city, onClick }: { activity: 
 
           <div className="flex-grow">
             <p className="font-medium line-clamp-2">{activity.description}</p>
-            <p className="text-sm text-muted-foreground">{activity.time}</p>
+            {isEditingTime ? (
+              <Input
+                ref={timeInputRef}
+                type="text"
+                value={timeValue}
+                onChange={(e) => setTimeValue(e.target.value)}
+                onBlur={handleTimeBlur}
+                onKeyDown={handleTimeKeyDown}
+                className="h-7 mt-1 text-sm text-muted-foreground w-24"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <p 
+                className="text-sm text-muted-foreground cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditingTime(true);
+                }}
+              >
+                {activity.time}
+              </p>
+            )}
             {activity.location && (
               <LocationLink location={activity.location} city={city} />
             )}
