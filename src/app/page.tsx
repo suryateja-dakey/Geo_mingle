@@ -17,7 +17,7 @@ import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
 import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
 import { GeneratingLoader } from '@/components/generating-loader';
 import { Button } from '@/components/ui/button';
-import { Bot, Plus, Telescope, Linkedin, Mail, Download } from 'lucide-react';
+import { Bot, Plus, Telescope, Linkedin, Mail } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
