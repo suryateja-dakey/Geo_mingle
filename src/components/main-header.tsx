@@ -2,7 +2,7 @@
 
 import { Compass, MapPin, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTheme } from '@/components/providers/theme-provider';
+import { useTheme } from 'next-themes';
 import { AutocompleteInput } from './autocomplete-input';
 
 interface MainHeaderProps {
@@ -15,7 +15,7 @@ export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-lg backdrop-saturate-150">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <a href="/" className="mr-4 flex items-center gap-2">
           <Compass className="h-6 w-6 text-primary" />
