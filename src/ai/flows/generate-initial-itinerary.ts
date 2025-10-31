@@ -37,7 +37,7 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   name: 'generateInitialItineraryPrompt',
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
-  model: googleAI.model('gemini-1.5-pro'),
+  model: googleAI.model('gemini-2.5-flash'),
   prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
 
 Your itinerary should, whenever possible, include suggestions for Breakfast, Lunch, and Dinner.
