@@ -7,7 +7,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { ActivityTimeline } from './activity-timeline';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import { Button } from './ui/button';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Clock } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +19,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { calculateItineraryDuration } from '@/lib/utils';
+import { useMemo } from 'react';
 
 interface ItineraryCardProps {
   itinerary: Itinerary;
@@ -32,6 +34,8 @@ interface ItineraryCardProps {
 
 export function ItineraryCard({ itinerary, setItineraries, removeItinerary, removeActivity, updateActivityTime, city, onActivityClick }: ItineraryCardProps) {
   const { setNodeRef } = useDroppable({ id: itinerary.id });
+
+  const duration = useMemo(() => calculateItineraryDuration(itinerary.activities), [itinerary.activities]);
 
   const handleSetActivities = (itineraryId: string, newActivities: Activity[]) => {
     setItineraries(prev =>
@@ -53,7 +57,15 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
       <Card className="w-full" ref={setNodeRef}>
         <CardHeader className="flex flex-row items-start justify-between">
           <div className='flex-1'>
-              <CardTitle>{itinerary.title}</CardTitle>
+              <div className="flex items-center gap-4">
+                <CardTitle>{itinerary.title}</CardTitle>
+                {duration && (
+                  <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    <span>{duration} total</span>
+                  </div>
+                )}
+              </div>
               {itinerary.prompt ? (
                   <CardDescription className="italic mt-1">"{itinerary.prompt}"</CardDescription>
               ) : isAiSuggestion ? (
