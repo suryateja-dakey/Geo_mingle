@@ -51,8 +51,8 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
     <SortableContext items={itinerary.activities.map(a => a.id)} strategy={verticalListSortingStrategy}>
       <Card className="w-full" ref={setNodeRef}>
         <CardHeader>
-          <div className='flex flex-col md:flex-row md:items-start md:justify-between'>
-            <div className='flex-1 mb-2 md:mb-0'>
+          <div className='flex flex-col items-start justify-between gap-2 sm:flex-row'>
+            <div className='flex-1'>
                 <CardTitle>{itinerary.title}</CardTitle>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm font-medium text-muted-foreground">
                   {timeDetails.startTime && timeDetails.endTime && (
@@ -75,7 +75,7 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                     <CardDescription className='mt-1'>A set of AI-generated activities.</CardDescription>
                 ) : null}
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex w-full items-center justify-end gap-1 sm:w-auto">
               <Button variant="ghost" size="icon" onClick={() => onShare(itinerary)}>
                 <Share2 className="h-5 w-5" />
                 <span className="sr-only">Share Itinerary</span>
