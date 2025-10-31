@@ -46,10 +46,6 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
       const dataUrl = await toPng(imageRef.current, { 
         cacheBust: true, 
         pixelRatio: 2,
-        fetchRequestInit: {
-            mode: 'cors',
-            credentials: 'omit'
-        }
       });
       setImageDataUrl(dataUrl);
     } catch (err) {
