@@ -333,7 +333,7 @@ function HomePageContent() {
         </main>
 
         <footer className="py-6 mt-auto bg-background/50">
-          <div className="container text-center text-sm text-muted-foreground">
+          <div className="container flex flex-col items-center justify-center text-sm text-muted-foreground">
             <p>Developed by Suryateja Dakey &copy; {new Date().getFullYear()}</p>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-2">
               <a href="https://www.linkedin.com/in/suryateja-dakey/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-primary transition-colors">
@@ -354,10 +354,10 @@ function HomePageContent() {
       </div>
       
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 md:bottom-6 md:right-6">
-        <Button size="default" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAddDialogOpen(true)}>
+        <Button size="sm" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAddDialogOpen(true)}>
           <Plus className="h-6 w-6 md:mr-2" /> <span className="hidden md:inline">Add Event</span>
         </Button>
-        <Button size="default" variant="secondary" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
+        <Button size="sm" variant="secondary" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
             <Bot className="h-6 w-6 md:mr-2" /> <span className="hidden md:inline">AI Suggestion</span>
         </Button>
       </div>
@@ -395,3 +395,5 @@ export default function Home() {
     </CityProvider>
   )
 }
+
+    
