@@ -163,7 +163,7 @@ export default function Home() {
         />
         <main className="flex-1">
           <div className="container mx-auto px-4 py-8 max-w-4xl">
-            <h1 className="text-3xl font-bold tracking-tight mb-8">My today's plan</h1>
+            <h1 className="text-3xl font-bold tracking-tight mb-8">Your today's plan</h1>
             {activities.length > 0 ? (
               <ActivityTimeline activities={activities} setActivities={setActivities} removeActivity={removeActivity} city={currentCity} onActivityClick={handleActivityClick} />
             ) : (
