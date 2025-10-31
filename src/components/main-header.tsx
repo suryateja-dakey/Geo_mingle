@@ -31,7 +31,7 @@ export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
       <div className="container flex h-auto min-h-16 flex-col items-center justify-between gap-4 py-2 md:flex-row md:gap-0 md:py-0">
         <a href="/" className="flex items-center gap-3">
             <Compass className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-fuchsia-500 to-orange-400 bg-clip-text text-transparent">
+            <span className="animate-gradient-text bg-gradient-to-r from-primary via-fuchsia-500 to-orange-400 bg-[200%_auto] bg-clip-text text-2xl font-bold text-transparent">
                 Geo Mingle
             </span>
         </a>
