@@ -3,8 +3,7 @@
 import { Compass, MapPin, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/providers/theme-provider';
-import { Skeleton } from './ui/skeleton';
-import { Input } from './ui/input';
+import { AutocompleteInput } from './autocomplete-input';
 
 interface MainHeaderProps {
     city: string | null;
@@ -26,16 +25,12 @@ export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
         <div className="flex flex-1 items-center justify-end space-x-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-[200px]">
             <MapPin className="h-4 w-4" />
-            {loading ? (
-                <Skeleton className="h-4 w-24" /> 
-            ) : (
-                <Input 
-                    value={city || ''}
-                    onChange={(e) => onCityChange(e.target.value)}
-                    placeholder="Enter a city..."
-                    className="h-8 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                />
-            )}
+            <AutocompleteInput
+              value={city}
+              onChange={onCityChange}
+              loading={loading}
+              className="w-full"
+            />
           </div>
           <Button
             variant="ghost"
