@@ -23,6 +23,7 @@ import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
 import { ShareItineraryDialog } from '@/components/share-itinerary-dialog';
 import { CityProvider } from '@/hooks/use-city-provider';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 function HomePageContent() {
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
@@ -354,12 +355,32 @@ function HomePageContent() {
       </div>
       
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 md:bottom-6 md:right-6">
-        <Button size="sm" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAddDialogOpen(true)}>
-          <Plus className="h-6 w-6 md:mr-2" /> <span className="hidden md:inline">Add Event</span>
-        </Button>
-        <Button size="sm" variant="secondary" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
-            <Bot className="h-6 w-6 md:mr-2" /> <span className="hidden md:inline">AI Suggestion</span>
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="icon" className="rounded-full shadow-lg h-14 w-14" onClick={() => setAddDialogOpen(true)}>
+                <Plus className="h-7 w-7" />
+                <span className="sr-only">Add Event</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add Event</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="icon" variant="secondary" className="rounded-full shadow-lg h-14 w-14" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
+                <Bot className="h-7 w-7" />
+                <span className="sr-only">AI Suggestion</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>AI Suggestion</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <AddActivityDialog open={isAddDialogOpen} onOpenChange={setAddDialogOpen} onAddActivity={addActivity} />
@@ -395,3 +416,5 @@ export default function Home() {
     </CityProvider>
   )
 }
+
+    
