@@ -7,6 +7,9 @@ import { generateInitialItinerary } from '@/ai/flows/generate-initial-itinerary'
 import { getActivityPhoto } from '@/ai/flows/get-activity-photo';
 import { useToast } from '@/hooks/use-toast';
 
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+
 import { MainHeader } from '@/components/main-header';
 import { AddActivityDialog } from '@/components/add-activity-dialog';
 import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
@@ -29,6 +32,13 @@ export default function Home() {
   const { city: detectedCity, loading: locationLoading } = useLocation();
   const [currentCity, setCurrentCity] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     try {
@@ -118,6 +128,56 @@ export default function Home() {
     }
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (!over) return;
+  
+    const activeId = String(active.id);
+    const overId = String(over.id);
+  
+    const activeItinerary = itineraries.find(it => it.activities.some(act => act.id === activeId));
+    
+    // Find if 'over' is an itinerary card or an activity card
+    let overItinerary = itineraries.find(it => it.id === overId);
+    if (!overItinerary) {
+      overItinerary = itineraries.find(it => it.activities.some(act => act.id === overId));
+    }
+  
+    if (!activeItinerary || !overItinerary) return;
+
+    // Scenario 1: Reordering within the same itinerary
+    if (activeItinerary.id === overItinerary.id) {
+        const activities = activeItinerary.activities;
+        const oldIndex = activities.findIndex((item) => item.id === activeId);
+        const newIndex = activities.findIndex((item) => item.id === overId);
+
+        if (oldIndex !== newIndex) {
+            const newActivities = arrayMove(activities, oldIndex, newIndex);
+            setItineraries(prev => prev.map(it => it.id === activeItinerary.id ? { ...it, activities: newActivities } : it));
+        }
+    } else {
+    // Scenario 2: Moving to a different itinerary
+        const activeActivities = activeItinerary.activities;
+        const overActivities = overItinerary.activities;
+        
+        const activeIndex = activeActivities.findIndex(act => act.id === activeId);
+        const overIndex = overActivities.findIndex(act => act.id === overId);
+
+        const [movedActivity] = activeActivities.splice(activeIndex, 1);
+        movedActivity.itineraryId = overItinerary.id;
+
+        // If dropping on an activity, place it there. If dropping on the list, place at the end.
+        const newOverIndex = overIndex !== -1 ? overIndex : overActivities.length;
+        overActivities.splice(newOverIndex, 0, movedActivity);
+
+        setItineraries(prev => prev.map(it => {
+            if (it.id === activeItinerary.id) return { ...it, activities: activeActivities };
+            if (it.id === overItinerary.id) return { ...it, activities: overActivities };
+            return it;
+        }));
+    }
+  };
 
   const handleGenerateItinerary = async (prompt: string) => {
     if (!currentCity || locationLoading) {
@@ -209,7 +269,7 @@ export default function Home() {
   }
 
   const visibleItineraries = itineraries.filter(it => it.activities.length > 0);
-  const hasContent = visibleItineraries.length > 0;
+  const hasContent = itineraries.some(it => it.activities.length > 0);
 
   return (
     <>
@@ -223,31 +283,33 @@ export default function Home() {
         <main className="flex-1">
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <h1 className="text-3xl font-bold tracking-tight mb-8">Your today's plan</h1>
-            {hasContent ? (
-              <div className="space-y-8">
-                {visibleItineraries.map((itinerary, index) => (
-                  <Fragment key={itinerary.id}>
-                    <ItineraryCard 
-                      itinerary={itinerary} 
-                      setItineraries={setItineraries} 
-                      removeItinerary={removeItinerary}
-                      removeActivity={removeActivity}
-                      city={currentCity} 
-                      onActivityClick={handleActivityClick} 
-                    />
-                    {index < visibleItineraries.length - 1 && <Separator className="my-8" />}
-                  </Fragment>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
-                <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />
-                <h3 className="mt-4 text-lg font-semibold">Your Day Awaits</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Your timeline is a blank canvas. Add an event or let our AI craft your journey.
-                </p>
-              </div>
-            )}
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              {hasContent ? (
+                <div className="space-y-8">
+                  {itineraries.map((itinerary, index) => (
+                    <Fragment key={itinerary.id}>
+                      <ItineraryCard 
+                        itinerary={itinerary} 
+                        setItineraries={setItineraries} 
+                        removeItinerary={removeItinerary}
+                        removeActivity={removeActivity}
+                        city={currentCity} 
+                        onActivityClick={handleActivityClick} 
+                      />
+                      {index < itineraries.length - 1 && itineraries[index + 1]?.activities.length > 0 && itinerary.activities.length > 0 && <Separator className="my-8" />}
+                    </Fragment>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
+                  <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />
+                  <h3 className="mt-4 text-lg font-semibold">Your Day Awaits</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Your timeline is a blank canvas. Add an event or let our AI craft your journey.
+                  </p>
+                </div>
+              )}
+            </DndContext>
           </div>
         </main>
       </div>
@@ -276,5 +338,3 @@ export default function Home() {
     </>
   );
 }
-
-    
