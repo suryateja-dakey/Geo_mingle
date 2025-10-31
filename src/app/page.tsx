@@ -1,12 +1,9 @@
-
-
 'use client';
 
 import { useState, useEffect, Fragment } from 'react';
 import type { Activity, Itinerary } from '@/lib/types';
 import { useLocation } from '@/hooks/use-location';
 import { generateInitialItinerary } from '@/ai/flows/generate-initial-itinerary';
-import { getActivityPhoto } from '@/ai/flows/get-activity-photo';
 import { useToast } from '@/hooks/use-toast';
 
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
@@ -135,23 +132,6 @@ function HomePageContent() {
     setItineraries(prev => prev.filter(it => it.id !== itineraryId));
   }
   
-  const fetchImageForActivity = async (activityId: string, itineraryId: string, query: string) => {
-    try {
-      const imageUrl = await getActivityPhoto({ query });
-      if (imageUrl) {
-        setItineraries(prev =>
-          prev.map(itinerary => 
-            itinerary.id === itineraryId
-              ? { ...itinerary, activities: itinerary.activities.map(act => act.id === activityId ? { ...act, imageUrl } : act) }
-              : itinerary
-          )
-        );
-      }
-    } catch (error) {
-      console.error(`Failed to fetch image for ${query}:`, error);
-    }
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
@@ -238,14 +218,7 @@ function HomePageContent() {
       
       toast({
         title: 'Itinerary generated!',
-        description: `Added ${newActivities.length} new activities. Fetching images...`,
-      });
-
-      // Progressively fetch images
-      newActivities.forEach(activity => {
-        if (activity.location && currentCity) {
-          fetchImageForActivity(activity.id, itineraryId, `${activity.location}, ${currentCity}`);
-        }
+        description: `Your new AI-powered itinerary is ready.`,
       });
 
     } catch (error) {
@@ -487,7 +460,3 @@ export default function Home() {
     </CityProvider>
   )
 }
-
-    
-
-    

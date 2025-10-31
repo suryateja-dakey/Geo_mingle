@@ -6,7 +6,7 @@ export type Activity = {
   isCustom: boolean;
   location?: string;
   imageUrl?: string;
-  imageHint?: string;
+  imageHint?: string; // This is now optional as AI flow provides imageUrl
 };
 
 export type Itinerary = {
