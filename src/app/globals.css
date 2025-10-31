@@ -69,4 +69,10 @@
   * {
     @apply border-border;
   }
+  
+  *,
+  *::before,
+  *::after {
+    @apply transition-colors duration-300;
+  }
 }
