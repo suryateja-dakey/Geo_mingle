@@ -35,9 +35,9 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
   }, [isEditingTime]);
 
   const handleTimeSave = () => {
-    // Regex for 12-hour format with AM/PM (e.g., 9:00 AM, 05:30pm)
-    if (timeValue.match(/^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$/i)) {
-      const formattedTime = timeValue.toUpperCase().replace(/\s/g, '');
+    const timeMatch = timeValue.match(/^(0?[1-9]|1[0-2]):([0-5][0-9])\s?(AM|PM)$/i);
+    if (timeMatch) {
+      const formattedTime = `${timeMatch[1]}:${timeMatch[2]} ${timeMatch[3].toUpperCase()}`;
       if (formattedTime !== activity.time) {
         onTimeChange(formattedTime);
       }

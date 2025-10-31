@@ -38,10 +38,16 @@ export function AddActivityDialog({ open, onOpenChange, onAddActivity }: AddActi
   });
 
   function onSubmit(data: ActivityFormValues) {
-    // Ensure consistent case for AM/PM
+    // Ensure consistent case and spacing for AM/PM
+    const timeMatch = data.time.match(/^(0?[1-9]|1[0-2]):([0-5][0-9])\s?(AM|PM)$/i);
+    let formattedTime = data.time;
+    if (timeMatch) {
+      formattedTime = `${timeMatch[1]}:${timeMatch[2]} ${timeMatch[3].toUpperCase()}`;
+    }
+
     const formattedData = {
       ...data,
-      time: data.time.toUpperCase().replace(/\s/g, ''),
+      time: formattedTime,
     };
     onAddActivity(formattedData);
     form.reset();
