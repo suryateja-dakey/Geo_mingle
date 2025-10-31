@@ -319,9 +319,9 @@ export default function Home() {
               ) : (
                 <div className="text-center py-16 px-4 border-2 border-dashed rounded-lg mt-8">
                   <Telescope className="mx-auto h-12 w-12 text-muted-foreground" />
-                  <h3 className="mt-4 text-lg font-semibold">Your Day Awaits</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Your timeline is a blank canvas. Add an event or let our AI craft your journey.
+                  <h3 className="mt-4 text-lg font-semibold">Welcome to Geo Mingle!</h3>
+                  <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+                    This is your AI-powered travel itinerary planner. Get started by adding a custom event, or let our AI create a personalized itinerary for you. Just describe your ideal day and we&apos;ll handle the rest!
                   </p>
                 </div>
               )}
