@@ -17,7 +17,7 @@ import { z } from 'zod';
 
 const activitySchema = z.object({
   description: z.string().min(3, 'Description must be at least 3 characters.'),
-  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Please use HH:MM format (e.g., 14:30)."),
+  time: z.string().regex(/^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$/i, "Please use a valid time format (e.g., 9:00 AM, 5:30 PM)."),
 });
 
 type ActivityFormValues = z.infer<typeof activitySchema>;
@@ -33,12 +33,17 @@ export function AddActivityDialog({ open, onOpenChange, onAddActivity }: AddActi
     resolver: zodResolver(activitySchema),
     defaultValues: {
       description: '',
-      time: '12:00',
+      time: '12:00 PM',
     },
   });
 
   function onSubmit(data: ActivityFormValues) {
-    onAddActivity(data);
+    // Ensure consistent case for AM/PM
+    const formattedData = {
+      ...data,
+      time: data.time.toUpperCase().replace(/\s/g, ''),
+    };
+    onAddActivity(formattedData);
     form.reset();
   }
 
@@ -71,9 +76,9 @@ export function AddActivityDialog({ open, onOpenChange, onAddActivity }: AddActi
               name="time"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Time (24h format)</FormLabel>
+                  <FormLabel>Time</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="e.g., 19:00" {...field} />
+                    <Input type="text" placeholder="e.g., 7:00 PM" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
