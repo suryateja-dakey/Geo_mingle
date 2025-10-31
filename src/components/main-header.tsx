@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Compass, MapPin, Moon, Sun } from 'lucide-react';
@@ -27,24 +28,19 @@ export function MainHeader({ city, loading, onCityChange }: MainHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="w-1/3">
-            {/* Empty div to balance the flex layout */}
-        </div>
-        <div className="w-1/3 flex justify-center">
-            <a href="/" className="flex items-center gap-3">
-              <Compass className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold">Geo Mingle</span>
-            </a>
-        </div>
-        <div className="w-1/3 flex justify-end items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-[200px]">
+      <div className="container flex h-auto min-h-16 flex-col items-center justify-between py-2 md:flex-row md:py-0">
+        <a href="/" className="flex items-center gap-3">
+          <Compass className="h-8 w-8 text-primary" />
+          <span className="text-2xl font-bold">Geo Mingle</span>
+        </a>
+        <div className="mt-2 flex w-full items-center justify-center gap-4 md:mt-0 md:w-auto md:justify-end">
+          <div className="flex flex-1 items-center gap-2 rounded-md border bg-transparent px-2 text-sm text-muted-foreground md:flex-initial md:border-0 md:bg-inherit md:px-0">
             <MapPin className="h-4 w-4" />
             <AutocompleteInput
               value={city}
               onChange={onCityChange}
               loading={loading}
-              className="w-full"
+              className="w-full flex-1"
             />
           </div>
           <Button

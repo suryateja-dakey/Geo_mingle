@@ -17,7 +17,7 @@ import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
 import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
 import { GeneratingLoader } from '@/components/generating-loader';
 import { Button } from '@/components/ui/button';
-import { Bot, Plus, Telescope, Linkedin, Mail } from 'lucide-react';
+import { Bot, Plus, Telescope, Linkedin, Mail, Download } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
@@ -335,7 +335,7 @@ function HomePageContent() {
         <footer className="py-6 mt-auto bg-background/50">
           <div className="container text-center text-sm text-muted-foreground">
             <p>Developed by Suryateja Dakey &copy; {new Date().getFullYear()}</p>
-            <div className="flex items-center justify-center gap-4 mt-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-2">
               <a href="https://www.linkedin.com/in/suryateja-dakey/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-primary transition-colors">
                 <Linkedin className="h-4 w-4" />
                 LinkedIn
@@ -353,12 +353,12 @@ function HomePageContent() {
         </footer>
       </div>
       
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-        <Button size="lg" className="rounded-full shadow-lg" onClick={() => setAddDialogOpen(true)}>
-          <Plus className="mr-2 h-5 w-5" /> Add Event
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 md:bottom-6 md:right-6">
+        <Button size="default" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAddDialogOpen(true)}>
+          <Plus className="h-6 w-6 md:mr-2" /> <span className="hidden md:inline">Add Event</span>
         </Button>
-        <Button size="lg" variant="secondary" className="rounded-full shadow-lg" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
-            <Bot className="mr-2 h-5 w-5" /> AI Suggestion
+        <Button size="default" variant="secondary" className="rounded-full shadow-lg h-12 w-12 p-0 md:w-auto md:px-6 md:h-auto" onClick={() => setAiSheetOpen(true)} disabled={isGenerating}>
+            <Bot className="h-6 w-6 md:mr-2" /> <span className="hidden md:inline">AI Suggestion</span>
         </Button>
       </div>
 
@@ -395,5 +395,3 @@ export default function Home() {
     </CityProvider>
   )
 }
-
-    
