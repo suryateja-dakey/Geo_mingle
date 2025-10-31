@@ -65,7 +65,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
-      <Card onClick={() => onClick(activity)}>
+      <Card onClick={() => onClick(activity)} className="transition-all hover:shadow-md hover:border-primary/50">
         <CardContent className="flex items-start p-4 gap-4">
           <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
