@@ -36,13 +36,14 @@ export const ItineraryShareImage = React.forwardRef<HTMLDivElement, ItinerarySha
                  <ImageIcon className="w-6 h-6 text-muted-foreground" />
               </div>
 
-              <div className="flex-grow">
-                <p className="font-medium text-xs leading-snug break-words whitespace-normal">{activity.description}</p>
-                {activity.location && (
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
-                    <MapPin className="h-3 w-3" />
+              <div className="flex-grow pt-0.5">
+                {activity.location ? (
+                  <div className="flex items-start gap-1.5 font-medium text-xs leading-snug break-words whitespace-normal">
+                    <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
                     <span>{activity.location}</span>
                   </div>
+                ) : (
+                  <p className="font-medium text-xs leading-snug break-words whitespace-normal">{activity.description}</p>
                 )}
               </div>
             </div>
