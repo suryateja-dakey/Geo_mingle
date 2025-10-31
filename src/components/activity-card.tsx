@@ -11,6 +11,7 @@ import { GripVertical, X, MapPin, ImageIcon, UtensilsCrossed } from 'lucide-reac
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 import { Input } from './ui/input';
+import { cn } from '@/lib/utils';
 
 export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }: { activity: Activity, onRemove: () => void, onTimeChange: (newTime: string) => void, city: string | null, onClick: (activity: Activity) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: activity.id });
@@ -57,7 +58,8 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
     }
   };
   
-  const isMeal = /breakfast|lunch|dinner/i.test(activity.description);
+  const mealMatch = activity.description.match(/breakfast|lunch|dinner/i);
+  const mealType = mealMatch ? mealMatch[0] : null;
 
   const LocationLink = ({ location, city }: { location?: string, city: string | null }) => {
     if (!location || !city) return null;
@@ -75,7 +77,19 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
-      <Card onClick={() => onClick(activity)} className="transition-all hover:shadow-md hover:border-primary/50">
+      <Card onClick={() => onClick(activity)} className="transition-all overflow-hidden hover:shadow-md hover:border-primary/50">
+        {mealType && (
+          <div 
+            className={cn(
+                "absolute top-2 -right-11 rotate-45 text-xs text-center text-white py-1 w-32 shadow-md",
+                mealType.toLowerCase() === 'breakfast' && 'bg-blue-500',
+                mealType.toLowerCase() === 'lunch' && 'bg-green-500',
+                mealType.toLowerCase() === 'dinner' && 'bg-purple-600'
+            )}
+          >
+            {mealType}
+          </div>
+        )}
         <CardContent className="flex items-start p-4 gap-4">
           <div {...attributes} {...listeners} className="cursor-grab touch-none p-2 -ml-2 text-muted-foreground hover:text-foreground pt-1">
             <GripVertical />
@@ -93,7 +107,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
                 />
             ) : (
                 activity.location ? (
-                    isMeal ? (
+                    mealType ? (
                         <UtensilsCrossed className="w-8 h-8 text-muted-foreground" />
                     ) : (
                         <Skeleton className="w-full h-full" />
@@ -106,7 +120,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
 
           <div className="flex-grow">
             <div className="flex items-center gap-2">
-              {isMeal && <UtensilsCrossed className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+              {mealType && <UtensilsCrossed className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
               <p className="font-medium line-clamp-2">{activity.description}</p>
             </div>
             {isEditingTime ? (
