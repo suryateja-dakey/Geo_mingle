@@ -18,7 +18,7 @@ import { AiSuggestionSheet } from '@/components/ai-suggestion-sheet';
 import { ActivityDetailDialog } from '@/components/activity-detail-dialog';
 import { GeneratingLoader } from '@/components/generating-loader';
 import { Button } from '@/components/ui/button';
-import { Bot, Plus, Telescope, Linkedin, Mail, Zap } from 'lucide-react';
+import { Bot, Plus, Telescope, Linkedin, Mail, Zap, Send } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ItineraryCard } from '@/components/itinerary-card';
 import { Separator } from '@/components/ui/separator';
@@ -259,6 +259,34 @@ function HomePageContent() {
       setIsGenerating(false);
     }
   };
+  
+  const handleInvite = async () => {
+    const shareData = {
+      title: 'Geo Mingle',
+      text: 'Check out this AI-powered travel itinerary planner!',
+      url: 'https://geo-mingle.vercel.app/',
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        await navigator.clipboard.writeText(shareData.url);
+        toast({
+          title: 'Link Copied!',
+          description: 'The link to Geo Mingle has been copied to your clipboard.',
+        });
+      }
+    } catch (error) {
+      console.error('Failed to share:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Sharing Failed',
+        description: 'Could not share the app at this time.',
+      });
+    }
+  };
+
 
   const handleQuickPlan = () => {
     handleGenerateItinerary("A balanced and interesting day with 3 to 5 activities.");
@@ -369,6 +397,12 @@ function HomePageContent() {
                 Email
               </a>
             </div>
+             <div className="mt-4">
+              <Button variant="ghost" onClick={handleInvite} className="inline-flex items-center gap-1.5">
+                <Send className="h-4 w-4" />
+                Invite a Friend
+              </Button>
+            </div>
           </div>
         </footer>
       </div>
@@ -453,3 +487,5 @@ export default function Home() {
     </CityProvider>
   )
 }
+
+    
