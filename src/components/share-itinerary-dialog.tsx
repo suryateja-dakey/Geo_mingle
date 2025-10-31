@@ -22,14 +22,15 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
   const { toast } = useToast();
 
   useEffect(() => {
-    if (open && itinerary && imageRef.current) {
-      setIsGenerating(true);
-      const timer = setTimeout(() => {
-          generateImage();
-      }, 500); // Small delay to ensure images are loaded
-      return () => clearTimeout(timer);
-    } else {
+    if (open && itinerary) {
+      // Reset state when dialog opens
       setImageDataUrl(null);
+      setIsGenerating(true);
+      // Generate image after a short delay to allow fonts/images to render
+      const timer = setTimeout(() => {
+        generateImage();
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [open, itinerary]);
   
@@ -102,20 +103,21 @@ export function ShareItineraryDialog({ itinerary, open, onOpenChange }: ShareIti
         </DialogHeader>
         
         <div className="relative my-4 flex items-center justify-center bg-muted/40 p-4 rounded-lg min-h-[300px]">
-          {isGenerating && (
+          {isGenerating && !imageDataUrl && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
               <p>Generating preview...</p>
             </div>
           )}
           
-          {imageDataUrl ? (
+          {imageDataUrl && (
             <img src={imageDataUrl} alt="Itinerary Preview" className="max-w-full h-auto rounded-md shadow-lg" />
-          ) : (
-            <div className="opacity-0">
-              {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} />}
-            </div>
           )}
+
+          {/* This is the hidden component used to generate the image. It's positioned off-screen. */}
+          <div className="absolute -z-10 -left-[10000px]">
+             {itinerary && <ItineraryShareImage ref={imageRef} itinerary={itinerary} />}
+          </div>
         </div>
 
         <DialogFooter className="gap-2 sm:justify-end">
