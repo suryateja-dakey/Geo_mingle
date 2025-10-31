@@ -82,12 +82,27 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
 
     return (
-      <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2" onClick={(e) => e.stopPropagation()}>
+      <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
         <MapPin className="h-4 w-4" />
         {location}
       </a>
     );
   };
+
+  const Badges = () => (
+    <>
+      {mealType && (
+        <Badge variant="outline" className={cn('capitalize', getMealBadgeColor())}>
+          {mealType}
+        </Badge>
+      )}
+      {activity.isCustom ? (
+        <Badge variant="outline">Custom</Badge>
+      ) : (
+        <Badge variant="secondary">AI</Badge>
+      )}
+    </>
+  );
 
   return (
     <div ref={setNodeRef} style={style} className="relative group">
@@ -121,7 +136,7 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
           </div>
 
           <div className="flex-grow">
-            <p className="font-medium line-clamp-2 pr-12">{activity.description}</p>
+            <p className="font-medium line-clamp-2 sm:pr-12">{activity.description}</p>
             {isEditingTime ? (
               <Input
                 ref={timeInputRef}
@@ -144,21 +159,24 @@ export function ActivityCard({ activity, onRemove, onTimeChange, city, onClick }
                 {activity.time}
               </p>
             )}
-            {activity.location && (
-              <LocationLink location={activity.location} city={city} />
-            )}
+            
+            <div className="mt-2 flex flex-col items-start gap-2">
+                {activity.location && (
+                    <LocationLink location={activity.location} city={city} />
+                )}
+                {/* Badges for mobile */}
+                <div className="sm:hidden flex items-center flex-wrap gap-2">
+                    <Badges />
+                </div>
+            </div>
+
           </div>
           <div className="absolute top-4 right-4 flex items-center gap-2">
-            {mealType && (
-              <Badge variant="outline" className={cn('capitalize', getMealBadgeColor())}>
-                {mealType}
-              </Badge>
-            )}
-            {activity.isCustom ? (
-              <Badge variant="outline">Custom</Badge>
-            ) : (
-              <Badge variant="secondary">AI</Badge>
-            )}
+            {/* Badges for desktop */}
+            <div className="hidden sm:flex items-center gap-2">
+                <Badges />
+            </div>
+
             <Button
               variant="ghost"
               size="icon"
