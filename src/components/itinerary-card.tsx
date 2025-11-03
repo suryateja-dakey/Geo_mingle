@@ -127,19 +127,19 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                 </Tooltip>
                 {isAiSuggestion && (
                   <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-5 w-5" />
-                            <span className="sr-only">Remove Itinerary</span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Trash2 className="h-5 w-5" />
+                                <span className="sr-only">Remove Itinerary</span>
+                            </Button>
+                        </AlertDialogTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>
                           <p>Delete Itinerary</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </AlertDialogTrigger>
+                      </TooltipContent>
+                    </Tooltip>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
