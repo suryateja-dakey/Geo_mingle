@@ -38,7 +38,9 @@ const generateInitialItineraryPrompt = ai.definePrompt({
   input: {schema: GenerateInitialItineraryInputSchema},
   output: {schema: GenerateInitialItineraryOutputSchema},
   model: googleAI.model('gemini-2.5-flash'),
-  prompt: `You are a travel expert who specializes in creating personalized daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
+  prompt: `You are a travel expert who specializes in creating personalized and efficient daily itineraries. Generate a detailed itinerary for the city of {{city}} based on the following description: {{prompt}}.
+
+CRITICAL: The order of activities MUST be geographically logical. Arrange the locations to create a sensible route through the city that minimizes travel time, as if you were planning a route on a map.
 
 Your itinerary should, whenever possible, include suggestions for Breakfast, Lunch, and Dinner.
 
