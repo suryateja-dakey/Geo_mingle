@@ -131,7 +131,7 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button variant="ghost" size="icon">
-                            <Trash2 className="h-5 w-5 text-destructive" />
+                            <Trash2 className="h-5 w-5" />
                             <span className="sr-only">Remove Itinerary</span>
                           </Button>
                         </TooltipTrigger>
