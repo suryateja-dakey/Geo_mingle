@@ -114,6 +114,7 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                     </TooltipContent>
                   </Tooltip>
                 )}
+                
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon" onClick={() => onShare(itinerary)}>
@@ -125,6 +126,7 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                     <p>Share Itinerary</p>
                   </TooltipContent>
                 </Tooltip>
+
                 {isAiSuggestion && (
                   <AlertDialog>
                     <Tooltip>
