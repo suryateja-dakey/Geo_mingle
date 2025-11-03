@@ -8,7 +8,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { ActivityTimeline } from './activity-timeline';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import { Button } from './ui/button';
-import { Trash2, Clock, ArrowRight, Share2 } from 'lucide-react';
+import { Trash2, Clock, ArrowRight, Share2, Map } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +23,7 @@ import {
 import { calculateItineraryTimeDetails } from '@/lib/utils';
 import { useMemo } from 'react';
 import { useCity } from '@/hooks/use-city';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface ItineraryCardProps {
   itinerary: Itinerary;
@@ -39,8 +40,29 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
   const { city } = useCity();
 
   const timeDetails = useMemo(() => calculateItineraryTimeDetails(itinerary.activities), [itinerary.activities]);
-
+  
   const isAiSuggestion = itinerary.id.startsWith('ai-itinerary');
+
+  const locations = useMemo(() => 
+    itinerary.activities
+      .map(act => act.location)
+      .filter((loc): loc is string => !!loc), 
+    [itinerary.activities]
+  );
+  
+  const directionsUrl = useMemo(() => {
+    if (locations.length < 2 || !city) return null;
+
+    const baseUrl = 'https://www.google.com/maps/dir/?api=1';
+    const origin = `&origin=${encodeURIComponent(`${locations[0]}, ${city}`)}`;
+    const destination = `&destination=${encodeURIComponent(`${locations[locations.length - 1]}, ${city}`)}`;
+    
+    const waypoints = locations.length > 2 
+      ? `&waypoints=${locations.slice(1, -1).map(loc => encodeURIComponent(`${loc}, ${city}`)).join('|')}`
+      : '';
+      
+    return `${baseUrl}${origin}${destination}${waypoints}`;
+  }, [locations, city]);
 
   // Render the card only if it has activities
   if (itinerary.activities.length === 0 && itinerary.id !== 'default-itinerary') {
@@ -76,34 +98,65 @@ export function ItineraryCard({ itinerary, setItineraries, removeItinerary, remo
                 ) : null}
             </div>
             <div className="flex w-full items-center justify-end gap-1 sm:w-auto">
-              <Button variant="ghost" size="icon" onClick={() => onShare(itinerary)}>
-                <Share2 className="h-5 w-5" />
-                <span className="sr-only">Share Itinerary</span>
-              </Button>
-              {isAiSuggestion && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Trash2 className="h-5 w-5 text-destructive" />
-                      <span className="sr-only">Remove Itinerary</span>
+              <TooltipProvider>
+                {directionsUrl && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button asChild variant="ghost" size="icon">
+                        <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
+                          <Map className="h-5 w-5" />
+                          <span className="sr-only">Get Directions</span>
+                        </a>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>View Route on Map</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => onShare(itinerary)}>
+                      <Share2 className="h-5 w-5" />
+                      <span className="sr-only">Share Itinerary</span>
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will permanently delete this entire itinerary stack and all of its activities. This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => removeItinerary(itinerary.id)}>
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Share Itinerary</p>
+                  </TooltipContent>
+                </Tooltip>
+                {isAiSuggestion && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <Trash2 className="h-5 w-5 text-destructive" />
+                            <span className="sr-only">Remove Itinerary</span>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Delete Itinerary</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently delete this entire itinerary stack and all of its activities. This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => removeItinerary(itinerary.id)}>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </TooltipProvider>
             </div>
           </div>
         </CardHeader>
